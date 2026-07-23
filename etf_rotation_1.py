@@ -495,24 +495,79 @@ def write_signal_report(regime, dyn, m_eff, eligible, targets, prev, new, quotes
     with open(os.path.join(SCRIPT_DIR, 'SIGNAL.md'), 'w', encoding='utf-8') as f:
         f.write(md)
 
+    # ---- 涨跌色（中国习惯：涨红跌绿） ----
+    def _last_close(code):
+        kl = cdata.get(code, [])
+        if not kl:
+            return None
+        last = kl[-1]
+        try:
+            if isinstance(last, dict):
+                return float(last.get('close'))
+            if isinstance(last, list) and len(last) >= 5:
+                return float(last[4])
+        except Exception:
+            return None
+        return None
+
+    def _pct(code, price):
+        lc = _last_close(code)
+        return (price - lc) / lc if lc else None
+
+    def _col(pct):
+        if pct is None:
+            return '#666'
+        return '#e53935' if pct > 0 else ('#2e7d32' if pct < 0 else '#666')
+
+    import re as _re
+    action_html = _re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', action_block).replace('\n', '<br>')
+
     rows = ""
     for i, it in enumerate(eligible[:10], 1):
-        rows += f"<tr><td>{i}</td><td>{it['code']}</td><td>{it['name']}</td><td>{it['score']:.4f}</td><td>{it['ann']:.2%}</td><td>{it['r2']:.4f}</td><td>{it['price']:.3f}</td></tr>"
+        pct = _pct(it['code'], it['price'])
+        pct_txt = f"{pct*100:+.2f}%" if pct is not None else "—"
+        col = _col(pct)
+        rows += (f"<tr><td>{i}</td><td>{it['code']}</td><td>{it['name']}</td>"
+                 f"<td>{it['score']:.4f}</td><td>{it['ann']:.2%}</td><td>{it['r2']:.4f}</td>"
+                 f"<td style='color:{col};font-weight:700'>{it['price']:.3f}<br><small>{pct_txt}</small></td></tr>")
+
+    regime_color = {'bull': '#e53935', 'bear': '#1565c0', 'sideways': '#757575'}.get(regime, '#757575')
+    css = """
+    <style>
+      *{box-sizing:border-box}
+      body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f0f2f5;color:#1a1a1a}
+      .wrap{max-width:760px;margin:0 auto;padding:16px}
+      .head{background:#fff;border-radius:14px;padding:18px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+      .head h1{margin:0 0 4px;font-size:22px}
+      .sub{color:#888;font-size:13px}
+      .hero{margin-top:14px;border-radius:14px;padding:18px 20px;color:#fff;font-size:18px;font-weight:700;line-height:1.5}
+      .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+      .card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+      .card h3{margin:0 0 10px;font-size:15px;color:#444}
+      .act{font-size:14px;line-height:1.7;white-space:normal}
+      .meta{font-size:13px;color:#555;line-height:1.7}
+      table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+      th,td{border-bottom:1px solid #eee;padding:8px 6px;text-align:left}
+      th{background:#fafafa;color:#666;font-weight:600}
+      .foot{color:#999;font-size:12px;margin-top:18px;text-align:center;line-height:1.6}
+      @media(max-width:600px){.grid{grid-template-columns:1fr}.head h1{font-size:20px}}
+    </style>"""
     html = f"""<!doctype html><html lang="zh"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ETF轮动信号</title></head><body style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:720px;margin:24px auto;padding:0 16px;color:#222">
-<h1>ETF 轮动信号（云端备份）</h1>
-<p style="color:#888">生成时间：{bj}（北京时间）｜ 数据源：新浪/东财 ｜ {'单只满仓' if SINGLE_HOLDING else '双持仓分散'}</p>
-<div style="background:#f5f7fa;border-left:4px solid #2b7;padding:12px 16px;border-radius:6px"><b>{action_head}</b></div>
-<pre style="white-space:pre-wrap;font-size:14px;line-height:1.6">{action_block}</pre>
-<h3>市场状态</h3><p>{regime_cn}（上限{dyn}）｜ 窗口{m_eff}天 ｜ 合格{len(eligible)}只</p>
-<h3>候选排名（前10）</h3>
-<table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse;width:100%;font-size:13px">
-<tr style="background:#f0f0f0"><th>排名</th><th>代码</th><th>名称</th><th>得分</th><th>年化</th><th>R²</th><th>现价</th></tr>
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>ETF轮动信号</title>{css}</head>
+<body><div class="wrap">
+<div class="head"><h1>📈 ETF 轮动信号 <span style="font-size:13px;color:#2b7">☁️云端备份</span></h1>
+<p class="sub">生成时间：{bj}（北京时间）｜ 模式：{'单只满仓' if SINGLE_HOLDING else '双持仓分散'} ｜ 数据源：新浪/东财</p></div>
+<div class="hero" style="background:{regime_color}">{action_head}</div>
+<div class="grid">
+<div class="card"><h3>今日操作</h3><div class="act">{action_html}</div></div>
+<div class="card"><h3>市场状态</h3><p class="meta">状态：<b>{regime_cn}</b>（分数上限 {dyn}）<br>动量窗口：<b>{m_eff} 天</b>（动态窗口 {'开' if USE_DYNAMIC_WINDOW else '关'}）<br>候选合格：<b>{len(eligible)}</b> 只</p></div>
+</div>
+<div class="card" style="margin-top:14px"><h3>候选排名（前 10，现价红涨绿跌）</h3>
+<table><tr><th>排名</th><th>代码</th><th>名称</th><th>得分</th><th>年化</th><th>R²</th><th>现价</th></tr>
 {rows}
-</table>
-<p style="color:#999;margin-top:24px">K线充足 {ok}/{len(ETF_POOL)} 只。本信号仅供备份参考，不构成投资建议。</p>
-</body></html>"""
+</table></div>
+<p class="foot">K线充足 {ok}/{len(ETF_POOL)} 只 ETF（不足者不参与打分）。本页由 GitHub Actions 每日 13:30(北京时间) 自动更新，作为极空间/本地脚本的备用查看；实际买卖以你本地执行为准。<br>本信号仅供备份参考，不构成投资建议。</p>
+</div></body></html>"""
     with open(os.path.join(SCRIPT_DIR, 'index.html'), 'w', encoding='utf-8') as f:
         f.write(html)
     logger.info(f"已写 SIGNAL.md / index.html（{bj}，合格{len(eligible)}只，覆盖{ok}/{len(ETF_POOL)}）")
