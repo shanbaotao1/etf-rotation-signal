@@ -1,0 +1,62 @@
+{
+ "params": {
+  "commission": 5e-05,
+  "slippage": 0.001,
+  "capital": 50000.0,
+  "start": "2026-07-24",
+  "strategy": "五福v1.1(多持仓)",
+  "cost_note": "与轮动V1统一:佣金万0.5+滑点0.1%"
+ },
+ "daily": [
+  {
+   "date": "2026-07-24",
+   "equity": 49947.65,
+   "regime": "weak",
+   "defensive": false,
+   "buy": [
+    {
+     "code": "159985.XSHE",
+     "name": "豆粕ETF",
+     "shares": 11100,
+     "price": 2.243,
+     "amount": 24923.44
+    },
+    {
+     "code": "512010.XSHG",
+     "name": "医药ETF易方达",
+     "shares": 66200,
+     "price": 0.377,
+     "amount": 24983.61
+    }
+   ],
+   "sell": [],
+   "hold": [
+    {
+     "code": "159985.XSHE",
+     "name": "豆粕ETF",
+     "shares": 11100,
+     "price": 2.243
+    },
+    {
+     "code": "512010.XSHG",
+     "name": "医药ETF易方达",
+     "shares": 66200,
+     "price": 0.377
+    }
+   ],
+   "equity_prev": 50000.0,
+   "ret": -0.0010470000000000201,
+   "cumret": -0.0010470000000000201
+  }
+ ],
+ "summary": {
+  "total_ret": -0.0010470000000000201,
+  "equity": 49947.65,
+  "max_dd": 0.0,
+  "sharpe": 0.0,
+  "win_rate": 0.0,
+  "cagr": -0.3177473245507967,
+  "days": 1,
+  "trades": 2
+ }
+}
