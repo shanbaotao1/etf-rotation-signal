@@ -34,16 +34,35 @@
    "ret": -0.0010457999999999856,
    "cumret": -0.0010457999999999856,
    "idx_cumret": 0.0
+  },
+  {
+   "date": "2026-07-24",
+   "equity": 49947.71,
+   "buy": [],
+   "sell": [],
+   "hold": [
+    {
+     "code": "159985.XSHE",
+     "name": "豆粕ETF",
+     "shares": 22200,
+     "price": 2.243
+    }
+   ],
+   "regime": "bear",
+   "equity_prev": 49947.71,
+   "ret": 0.0,
+   "cumret": -0.0010457999999999856,
+   "idx_cumret": 0.0
   }
  ],
  "summary": {
   "total_ret": -0.0010457999999999856,
   "equity": 49947.71,
   "max_dd": 0.0,
-  "sharpe": 0.0,
+  "sharpe": -15.874507866387544,
   "win_rate": 0.0,
   "cagr": -0.31744811926936656,
-  "days": 1,
+  "days": 2,
   "trades": 1,
   "idx_total_ret": 0.0,
   "idx_max_dd": 0.0,
