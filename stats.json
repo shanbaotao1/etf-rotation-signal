@@ -3,7 +3,9 @@
   "commission": 5e-05,
   "slippage": 0.001,
   "capital": 50000,
-  "start": "2026-07-23"
+  "start": "2026-07-23",
+  "benchmark": "159300.XSHE",
+  "benchmark_name": "沪深300"
  },
  "daily": [
   {
@@ -30,7 +32,8 @@
    "regime": "bear",
    "equity_prev": 50000,
    "ret": -0.0010457999999999856,
-   "cumret": -0.0010457999999999856
+   "cumret": -0.0010457999999999856,
+   "idx_cumret": 0.0
   }
  ],
  "summary": {
@@ -41,6 +44,9 @@
   "win_rate": 0.0,
   "cagr": -0.31744811926936656,
   "days": 1,
-  "trades": 1
+  "trades": 1,
+  "idx_total_ret": 0.0,
+  "idx_max_dd": 0.0,
+  "idx_alpha": -0.0010457999999999856
  }
 }
