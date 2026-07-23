@@ -17,14 +17,147 @@
       th,td{border-bottom:1px solid #eee;padding:8px 6px;text-align:left}
       th{background:#fafafa;color:#666;font-weight:600}
       .foot{color:#999;font-size:12px;margin-top:18px;text-align:center;line-height:1.6}
+      .stbig{font-size:18px;font-weight:700;margin:6px 0 12px}
+      .stbig span{font-size:22px}
+      .chips{display:flex;flex-wrap:wrap;gap:10px}
+      .chip{background:#f7f8fa;border-radius:10px;padding:8px 12px;font-size:12px;color:#666;min-width:64px}
+      .chip b{display:block;font-size:15px;color:#222;margin-top:2px}
+      .pbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px}
+      .pbtn{border:1px solid #ddd;background:#fff;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:#444}
+      .pbtn.on{background:#2b7;color:#fff;border-color:#2b7}
+      .pbtn:hover{border-color:#2b7}
+      .cust{font-size:12px;color:#666;margin-left:6px}
+      .cust input{font-size:12px;padding:3px 6px;border:1px solid #ddd;border-radius:6px}
+      #chart{background:#fff;border-radius:10px;padding:6px}
       @media(max-width:600px){.grid{grid-template-columns:1fr}.head h1{font-size:20px}}
     </style></head>
 <body><div class="wrap">
 <div class="head"><h1>📈 ETF 轮动信号 <span style="font-size:13px;color:#2b7">☁️云端备份</span></h1>
-<p class="sub">生成时间：2026-07-23 22:51:30（北京时间）｜ 模式：单只满仓 ｜ 数据源：新浪/东财</p></div>
+<p class="sub">生成时间：2026-07-23 23:12:07（北京时间）｜ 模式：单只满仓 ｜ 数据源：新浪/东财</p></div>
 <div class="hero" style="background:#1565c0">🎯 今日建议持有：豆粕ETF(159985.XSHE) ｜ 得分 2.1813 ｜ 现价 2.243</div>
+
+<div class="card" style="margin-top:14px">
+  <h3>📊 收益统计（含滑点 0.10% + 佣金万0.5，无最低5元）</h3>
+  <div class="stbig">累计收益 <span id="stTotal">—</span> ｜ 当前净值 <span id="stEquity">—</span></div>
+  <div class="chips">
+    <div class="chip"><span>区间</span><b><span id="stRange">—</span> ~ <span id="stRange2">—</span></b></div>
+    <div class="chip"><span>年化</span><b id="stCagr">—</b></div>
+    <div class="chip"><span>最大回撤</span><b id="stMdd">—</b></div>
+    <div class="chip"><span>夏普</span><b id="stSharpe">—</b></div>
+    <div class="chip"><span>胜率</span><b id="stWin">—</b></div>
+  </div>
+  <div class="pbar">
+    <button class="pbtn" data-r="week">本周</button>
+    <button class="pbtn on" data-r="month">本月</button>
+    <button class="pbtn" data-r="30">近30天</button>
+    <button class="pbtn" data-r="all">全部</button>
+    <span class="cust">自定义 <input id="dfrom" type="date"> ~ <input id="dto" type="date"> <button id="applyCustom" class="pbtn">应用</button></span>
+  </div>
+  <div id="chart" style="margin-top:8px"></div>
+  <h3 style="margin-top:14px">每日买卖记录</h3>
+  <table><thead><tr><th>日期</th><th>方向</th><th>代码</th><th>名称</th><th>股数</th><th>价格</th></tr></thead><tbody id="tradeBody"></tbody></table>
+</div>
+<script>
+const STATS = {"params": {"commission": 5e-05, "slippage": 0.001, "capital": 50000, "start": "2026-07-23"}, "daily": [{"date": "2026-07-23", "equity": 49947.71, "buy": [{"code": "159985.XSHE", "name": "豆粕ETF", "shares": 22200, "price": 2.243, "amount": 49846.89}], "sell": [], "hold": [{"code": "159985.XSHE", "name": "豆粕ETF", "shares": 22200, "price": 2.243}], "regime": "bear", "equity_prev": 50000, "ret": -0.0010457999999999856, "cumret": -0.0010457999999999856}], "summary": {"total_ret": -0.0010457999999999856, "equity": 49947.71, "max_dd": 0.0, "sharpe": 0.0, "win_rate": 0.0, "cagr": -0.31744811926936656, "days": 1, "trades": 1}};
+
+function parseDate(s){return new Date(s+'T00:00:00');}
+function fmtPct(x){return (x*100).toFixed(2)+'%';}
+function fmtMoney(x){return '¥'+Number(x).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function computeStats(slice){
+  if(!slice.length) return null;
+  const startEq=slice[0].equity_prev, endEq=slice[slice.length-1].equity;
+  const totalRet=endEq/startEq-1;
+  let peak=slice[0].equity,mdd=0;
+  for(const d of slice){ if(d.equity>peak)peak=d.equity; const dd=d.equity/peak-1; if(dd<mdd)mdd=dd; }
+  const rets=slice.map(d=>d.ret);
+  const mean=rets.reduce((a,b)=>a+b,0)/rets.length;
+  const varr=rets.reduce((a,b)=>a+(b-mean)*(b-mean),0)/rets.length;
+  const std=Math.sqrt(varr);
+  const sharpe=std>0?mean/std*Math.sqrt(252):0;
+  const win=rets.filter(r=>r>0).length;
+  const winRate=win/rets.length;
+  const d0=parseDate(slice[0].date), d1=parseDate(slice[slice.length-1].date);
+  const days=Math.max((d1-d0)/86400000,1);
+  const cagr=Math.pow(endEq/startEq,365/days)-1;
+  const trades=slice.reduce((a,d)=>a+d.buy.length+d.sell.length,0);
+  return {totalRet,endEq,mdd,sharpe,winRate,cagr,trades};
+}
+function getRange(which){
+  const all=STATS.daily; if(!all.length) return [];
+  const today=all[all.length-1].date;
+  if(which==='all') return all;
+  if(which==='month'){ const ym=today.slice(0,7); return all.filter(d=>d.date.slice(0,7)===ym); }
+  if(which==='week'){ const t=parseDate(today), cut=new Date(t.getTime()-6*86400000); return all.filter(d=>parseDate(d.date)>=cut); }
+  if(which==='30'){ const t=parseDate(today), cut=new Date(t.getTime()-29*86400000); return all.filter(d=>parseDate(d.date)>=cut); }
+  if(which==='custom'){ const a=document.getElementById('dfrom').value,b=document.getElementById('dto').value; if(!a||!b) return all; return all.filter(d=>d.date>=a&&d.date<=b); }
+  return all;
+}
+function drawChart(slice){
+  const el=document.getElementById('chart');
+  if(!slice.length){el.innerHTML='<p style="color:#999">暂无数据</p>';return;}
+  const W=700,H=240,padL=46,padR=14,padT=16,padB=28;
+  const vals=slice.map(d=>d.cumret*100);
+  let mn=Math.min.apply(null,vals.concat([0])), mx=Math.max.apply(null,vals.concat([0]));
+  if(mx-mn<0.5){mx+=0.5;mn-=0.5;}
+  const n=slice.length;
+  const x=i=> padL+(n<=1?0:i*(W-padL-padR)/(n-1));
+  const y=v=> padT+(H-padT-padB)*(1-(v-mn)/(mx-mn));
+  let grid=''; const ticks=4;
+  for(let k=0;k<=ticks;k++){ const v=mn+(mx-mn)*k/ticks, yy=y(v);
+    grid+='<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" stroke="#eee"/>'+
+          '<text x="'+(padL-6)+'" y="'+(yy+4).toFixed(1)+'" text-anchor="end" font-size="10" fill="#999">'+v.toFixed(1)+'%</text>'; }
+  const zy=y(0);
+  grid+='<line x1="'+padL+'" y1="'+zy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+zy.toFixed(1)+'" stroke="#bbb" stroke-dasharray="3,3"/>';
+  let pts=''; for(let i=0;i<n;i++){ pts+=x(i).toFixed(1)+','+y(vals[i]).toFixed(1)+' '; }
+  const last=vals[n-1], col=last>=0?'#e53935':'#2e7d32';
+  const areaPts=padL+','+zy.toFixed(1)+' '+pts+(W-padR).toFixed(1)+','+zy.toFixed(1);
+  let xlab=''; const step=Math.max(1,Math.floor(n/6));
+  for(let i=0;i<n;i+=step){ xlab+='<text x="'+x(i).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" font-size="10" fill="#999">'+slice[i].date.slice(5)+'</text>'; }
+  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" width="100%" preserveAspectRatio="xMidYMid meet">'+grid+
+    '<polygon points="'+areaPts+'" fill="'+col+'" opacity="0.08"/>'+
+    '<polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="2"/>'+xlab+'</svg>';
+}
+function renderTable(slice){
+  const tb=document.getElementById('tradeBody'); tb.innerHTML='';
+  const rows=slice.slice().reverse();
+  for(const d of rows){
+    const ops=[];
+    for(const b of d.buy) ops.push(['买',b]);
+    for(const s of d.sell) ops.push(['卖',s]);
+    if(!ops.length) ops.push(['持',null]);
+    for(const op of ops){
+      const act=op[0], item=op[1];
+      if(act==='持'){ const holds=d.hold.map(h=>h.name+'('+h.code+')').join('、')||'空仓';
+        tb.innerHTML+='<tr><td>'+d.date+'</td><td style="color:#888">持有</td><td colspan="4">'+holds+'</td></tr>'; }
+      else { const color=act==='买'?'#e53935':'#2e7d32';
+        tb.innerHTML+='<tr><td>'+d.date+'</td><td style="color:'+color+';font-weight:700">'+act+'</td><td>'+item.code+'</td><td>'+item.name+'</td><td>'+item.shares+'</td><td>'+item.price+'</td></tr>'; }
+    }
+  }
+  if(!rows.length) tb.innerHTML='<tr><td colspan="6" style="color:#999">该区间无数据</td></tr>';
+}
+function update(which){
+  const slice=getRange(which); const s=computeStats(slice);
+  if(s){
+    const tEl=document.getElementById('stTotal'); tEl.textContent=fmtPct(s.totalRet);
+    tEl.style.color=s.totalRet>=0?'#e53935':'#2e7d32';
+    document.getElementById('stEquity').textContent=fmtMoney(s.endEq);
+    document.getElementById('stCagr').textContent=fmtPct(s.cagr);
+    document.getElementById('stMdd').textContent=fmtPct(s.mdd);
+    document.getElementById('stSharpe').textContent=s.sharpe.toFixed(2);
+    document.getElementById('stWin').textContent=fmtPct(s.winRate);
+    document.getElementById('stRange').textContent=slice.length?slice[0].date:'-';
+    document.getElementById('stRange2').textContent=slice.length?slice[slice.length-1].date:'-';
+  }
+  drawChart(slice); renderTable(slice);
+}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.pbtn').forEach(function(b){ b.addEventListener('click',function(){ if(b.id==='applyCustom')return; document.querySelectorAll('.pbtn').forEach(x=>x.classList.remove('on')); b.classList.add('on'); update(b.dataset.r); }); });
+  document.getElementById('applyCustom').addEventListener('click',function(){ document.querySelectorAll('.pbtn').forEach(x=>x.classList.remove('on')); update('custom'); });
+  update('month');
+});
+</script>
 <div class="grid">
-<div class="card"><h3>今日操作</h3><div class="act"><b>【卖出】</b><br>无<br><br><b>【买入/持有】</b><br>持有不动 豆粕ETF(159985.XSHE) ｜ 22200股 @ 2.243</div></div>
+<div class="card"><h3>今日操作</h3><div class="act"><b>【卖出】</b><br>无<br><br><b>【买入/持有】</b><br>买入 豆粕ETF(159985.XSHE) ｜ 22200股 × 2.243 ≈ 49795元</div></div>
 <div class="card"><h3>市场状态</h3><p class="meta">状态：<b>熊市</b>（分数上限 3）<br>动量窗口：<b>25 天</b>（动态窗口 开）<br>候选合格：<b>4</b> 只</p></div>
 </div>
 <div class="card" style="margin-top:14px"><h3>候选排名（前 10，现价红涨绿跌）</h3>
