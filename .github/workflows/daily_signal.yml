@@ -37,7 +37,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add SIGNAL.md index.html positions_v1.json kline_cache.json dyn_window_state.json
+          git add SIGNAL.md index.html positions_v1.json kline_cache.json dyn_window_state.json history.json stats.json
           if git diff --cached --quiet; then
             echo "无变化，跳过提交"
           else
