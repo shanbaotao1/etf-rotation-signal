@@ -726,10 +726,12 @@ def append_history(date_str, regime, dyn, m_eff, prev, new, prices):
             hist = json.load(open(HISTORY_FILE, encoding='utf-8'))
         except Exception:
             hist = []
+    is_first = (len(hist) == 0)
+    rec_prev = {} if is_first else prev   # 首日忽略历史持仓，统计/展示均视为“建仓买入”
     hist = [h for h in hist if h.get('date') != date_str]
     hist.append({
         'date': date_str, 'regime': regime, 'dyn': dyn, 'm_eff': m_eff,
-        'prev': prev, 'new': new, 'prices': prices,
+        'prev': rec_prev, 'new': new, 'prices': prices,
     })
     hist.sort(key=lambda x: x['date'])
     json.dump(hist, open(HISTORY_FILE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
@@ -742,9 +744,10 @@ def _simulate_portfolio(hist):
     cash = capital
     holdings = {}        # code -> shares
     daily = []
-    for rec in hist:
+    for i, rec in enumerate(hist):
         date = rec['date']
-        prev = rec.get('prev', {}) or {}
+        # 首日强制从初始资金起步（忽略历史遗留持仓），符合“从今日开始统计”
+        prev = {} if i == 0 else (rec.get('prev', {}) or {})
         new = rec.get('new', {}) or {}
         prices = rec.get('prices', {}) or {}
         buys, sells = [], []
