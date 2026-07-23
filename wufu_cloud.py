@@ -11,9 +11,8 @@
 - 成本模型与轮动V1 统一：佣金万0.5（无最低5元）+ 单边0.1%滑点
 - 每个交易日 13:30 由 GitHub Actions 调用，更新：
     history_wufu.json / stats_wufu.json / positions_wufu.json
-- 最后更新: 2026-07-23
-- 本次改动: 新建云端版五福，多持仓分散 + 相关性守卫 + 主线追强 + 弱市切避险池，
-           与轮动V1 同台对比（网页由 build_compare_page.py 合并生成）
+- 最后更新: 2026-07-23 (v2)
+- 本次改动: 买卖改为100股整手（与轮动V1口径一致）；清仓单可含零股全卖
 ---------------------------------------------------------------------
 已知近似（不影响未来对比公平性）：
 1. 动态池（回测里取全市场成交前150）云端改为只用固定池——固定池已覆盖商品/海外/
@@ -817,17 +816,22 @@ def execute_today(target, score_map, defensive, quotes, positions, cash, cost):
         px = q.get('current_price', 0) if q else 0
         if not px or px <= 0:
             continue
-        desired = tv / (px * (1 + SLIPPAGE_RATE))
+        desired = int(tv / (px * (1 + SLIPPAGE_RATE)) / 100) * 100   # 整百股
         cur = positions.get(c, 0)
         delta = desired - cur
-        if abs(delta * px) <= 10:   # 微小变动忽略（约10元）
+        # 按整手对齐增减仓（清仓走上面的全卖分支，可含零股）
+        if delta > 0:
+            delta = int(delta / 100) * 100
+        else:
+            delta = -(int(-delta / 100) * 100)
+        if delta == 0 or abs(delta * px) <= 10:   # 微小变动忽略
             continue
         if delta > 0:
             amt = delta * px * (1 + SLIPPAGE_RATE)
             comm = amt * COMMISSION_RATE
             tot = amt + comm
             if tot > cash:
-                affordable = cash / (1 + SLIPPAGE_RATE) / (1 + COMMISSION_RATE) / px
+                affordable = int(cash / (1 + SLIPPAGE_RATE) / (1 + COMMISSION_RATE) / px / 100) * 100
                 delta = affordable
                 tot = delta * px * (1 + SLIPPAGE_RATE) * (1 + COMMISSION_RATE)
                 if delta <= 0:
