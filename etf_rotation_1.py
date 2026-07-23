@@ -44,6 +44,10 @@ PUSHPLUS_TOKEN = os.environ.get("PUSHPLUS_TOKEN", "58ce00f54cb74f0f8f6a910668dc2
 PUSH_PREFIX = "🔵【轮动V1】"
 TOTAL_CAPITAL = 50000
 
+# ================== 收益统计成本假设（网页展示用，可在此调整） ==================
+COMMISSION_RATE = 0.00005   # 交易佣金：万分之0.5（=0.005%），无最低5元限制
+SLIPPAGE_RATE   = 0.001     # 滑点：单边 0.1%（买价×(1+滑点)，卖价×(1-滑点)）；可按需修改
+
 # ================== 云端模式（GitHub Actions 用） ==================
 # 设为 "1" 时：跳过本地 PanWatch，改用新浪/东财公开行情；单次计算并写 SIGNAL.md。
 CLOUD_MODE = os.environ.get("CLOUD_MODE", "0") == "1"
@@ -158,6 +162,8 @@ def get_etf_sector(etf_name):
 
 # ================== 日志系统 ==================
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+HISTORY_FILE = os.path.join(SCRIPT_DIR, 'history.json')   # 每日信号历史（供统计）
+STATS_FILE   = os.path.join(SCRIPT_DIR, 'stats.json')     # 统计结果（供网页/调试）
 LOG_DIR = os.path.join(SCRIPT_DIR, 'logs')
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -427,7 +433,7 @@ def get_quotes_cloud(symbols):
 def _bj_now():
     return datetime.now(timezone.utc) + timedelta(hours=8)
 
-def write_signal_report(regime, dyn, m_eff, eligible, targets, prev, new, quotes):
+def write_signal_report(regime, dyn, m_eff, eligible, targets, prev, new, quotes, stats=None):
     bj = _bj_now().strftime('%Y-%m-%d %H:%M:%S')
     cache = load_cache(); cdata = cache.get('data', {})
     ok = sum(1 for c in ETF_POOL if len(cdata.get(c, [])) >= MOMENTUM_DAYS)
@@ -550,6 +556,18 @@ def write_signal_report(regime, dyn, m_eff, eligible, targets, prev, new, quotes
       th,td{border-bottom:1px solid #eee;padding:8px 6px;text-align:left}
       th{background:#fafafa;color:#666;font-weight:600}
       .foot{color:#999;font-size:12px;margin-top:18px;text-align:center;line-height:1.6}
+      .stbig{font-size:18px;font-weight:700;margin:6px 0 12px}
+      .stbig span{font-size:22px}
+      .chips{display:flex;flex-wrap:wrap;gap:10px}
+      .chip{background:#f7f8fa;border-radius:10px;padding:8px 12px;font-size:12px;color:#666;min-width:64px}
+      .chip b{display:block;font-size:15px;color:#222;margin-top:2px}
+      .pbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px}
+      .pbtn{border:1px solid #ddd;background:#fff;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:#444}
+      .pbtn.on{background:#2b7;color:#fff;border-color:#2b7}
+      .pbtn:hover{border-color:#2b7}
+      .cust{font-size:12px;color:#666;margin-left:6px}
+      .cust input{font-size:12px;padding:3px 6px;border:1px solid #ddd;border-radius:6px}
+      #chart{background:#fff;border-radius:10px;padding:6px}
       @media(max-width:600px){.grid{grid-template-columns:1fr}.head h1{font-size:20px}}
     </style>"""
     html = f"""<!doctype html><html lang="zh"><head><meta charset="utf-8">
@@ -558,6 +576,7 @@ def write_signal_report(regime, dyn, m_eff, eligible, targets, prev, new, quotes
 <div class="head"><h1>📈 ETF 轮动信号 <span style="font-size:13px;color:#2b7">☁️云端备份</span></h1>
 <p class="sub">生成时间：{bj}（北京时间）｜ 模式：{'单只满仓' if SINGLE_HOLDING else '双持仓分散'} ｜ 数据源：新浪/东财</p></div>
 <div class="hero" style="background:{regime_color}">{action_head}</div>
+___STATS_BLOCK___
 <div class="grid">
 <div class="card"><h3>今日操作</h3><div class="act">{action_html}</div></div>
 <div class="card"><h3>市场状态</h3><p class="meta">状态：<b>{regime_cn}</b>（分数上限 {dyn}）<br>动量窗口：<b>{m_eff} 天</b>（动态窗口 {'开' if USE_DYNAMIC_WINDOW else '关'}）<br>候选合格：<b>{len(eligible)}</b> 只</p></div>
@@ -568,9 +587,270 @@ def write_signal_report(regime, dyn, m_eff, eligible, targets, prev, new, quotes
 </table></div>
 <p class="foot">K线充足 {ok}/{len(ETF_POOL)} 只 ETF（不足者不参与打分）。本页由 GitHub Actions 每日 13:30(北京时间) 自动更新，作为极空间/本地脚本的备用查看；实际买卖以你本地执行为准。<br>本信号仅供备份参考，不构成投资建议。</p>
 </div></body></html>"""
+    # ---- 收益统计区块（区间选择 / 收益率曲线 / 每日买卖） ----
+    slipp_pct = SLIPPAGE_RATE * 100
+    stats_head = f"""
+<div class="card" style="margin-top:14px">
+  <h3>📊 收益统计（含滑点 {slipp_pct:.2f}% + 佣金万0.5，无最低5元）</h3>
+  <div class="stbig">累计收益 <span id="stTotal">—</span> ｜ 当前净值 <span id="stEquity">—</span></div>
+  <div class="chips">
+    <div class="chip"><span>区间</span><b><span id="stRange">—</span> ~ <span id="stRange2">—</span></b></div>
+    <div class="chip"><span>年化</span><b id="stCagr">—</b></div>
+    <div class="chip"><span>最大回撤</span><b id="stMdd">—</b></div>
+    <div class="chip"><span>夏普</span><b id="stSharpe">—</b></div>
+    <div class="chip"><span>胜率</span><b id="stWin">—</b></div>
+  </div>
+  <div class="pbar">
+    <button class="pbtn" data-r="week">本周</button>
+    <button class="pbtn on" data-r="month">本月</button>
+    <button class="pbtn" data-r="30">近30天</button>
+    <button class="pbtn" data-r="all">全部</button>
+    <span class="cust">自定义 <input id="dfrom" type="date"> ~ <input id="dto" type="date"> <button id="applyCustom" class="pbtn">应用</button></span>
+  </div>
+  <div id="chart" style="margin-top:8px"></div>
+  <h3 style="margin-top:14px">每日买卖记录</h3>
+  <table><thead><tr><th>日期</th><th>方向</th><th>代码</th><th>名称</th><th>股数</th><th>价格</th></tr></thead><tbody id="tradeBody"></tbody></table>
+</div>
+<script>
+"""
+    stats_js_body = r'''
+function parseDate(s){return new Date(s+'T00:00:00');}
+function fmtPct(x){return (x*100).toFixed(2)+'%';}
+function fmtMoney(x){return '¥'+Number(x).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function computeStats(slice){
+  if(!slice.length) return null;
+  const startEq=slice[0].equity_prev, endEq=slice[slice.length-1].equity;
+  const totalRet=endEq/startEq-1;
+  let peak=slice[0].equity,mdd=0;
+  for(const d of slice){ if(d.equity>peak)peak=d.equity; const dd=d.equity/peak-1; if(dd<mdd)mdd=dd; }
+  const rets=slice.map(d=>d.ret);
+  const mean=rets.reduce((a,b)=>a+b,0)/rets.length;
+  const varr=rets.reduce((a,b)=>a+(b-mean)*(b-mean),0)/rets.length;
+  const std=Math.sqrt(varr);
+  const sharpe=std>0?mean/std*Math.sqrt(252):0;
+  const win=rets.filter(r=>r>0).length;
+  const winRate=win/rets.length;
+  const d0=parseDate(slice[0].date), d1=parseDate(slice[slice.length-1].date);
+  const days=Math.max((d1-d0)/86400000,1);
+  const cagr=Math.pow(endEq/startEq,365/days)-1;
+  const trades=slice.reduce((a,d)=>a+d.buy.length+d.sell.length,0);
+  return {totalRet,endEq,mdd,sharpe,winRate,cagr,trades};
+}
+function getRange(which){
+  const all=STATS.daily; if(!all.length) return [];
+  const today=all[all.length-1].date;
+  if(which==='all') return all;
+  if(which==='month'){ const ym=today.slice(0,7); return all.filter(d=>d.date.slice(0,7)===ym); }
+  if(which==='week'){ const t=parseDate(today), cut=new Date(t.getTime()-6*86400000); return all.filter(d=>parseDate(d.date)>=cut); }
+  if(which==='30'){ const t=parseDate(today), cut=new Date(t.getTime()-29*86400000); return all.filter(d=>parseDate(d.date)>=cut); }
+  if(which==='custom'){ const a=document.getElementById('dfrom').value,b=document.getElementById('dto').value; if(!a||!b) return all; return all.filter(d=>d.date>=a&&d.date<=b); }
+  return all;
+}
+function drawChart(slice){
+  const el=document.getElementById('chart');
+  if(!slice.length){el.innerHTML='<p style="color:#999">暂无数据</p>';return;}
+  const W=700,H=240,padL=46,padR=14,padT=16,padB=28;
+  const vals=slice.map(d=>d.cumret*100);
+  let mn=Math.min.apply(null,vals.concat([0])), mx=Math.max.apply(null,vals.concat([0]));
+  if(mx-mn<0.5){mx+=0.5;mn-=0.5;}
+  const n=slice.length;
+  const x=i=> padL+(n<=1?0:i*(W-padL-padR)/(n-1));
+  const y=v=> padT+(H-padT-padB)*(1-(v-mn)/(mx-mn));
+  let grid=''; const ticks=4;
+  for(let k=0;k<=ticks;k++){ const v=mn+(mx-mn)*k/ticks, yy=y(v);
+    grid+='<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" stroke="#eee"/>'+
+          '<text x="'+(padL-6)+'" y="'+(yy+4).toFixed(1)+'" text-anchor="end" font-size="10" fill="#999">'+v.toFixed(1)+'%</text>'; }
+  const zy=y(0);
+  grid+='<line x1="'+padL+'" y1="'+zy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+zy.toFixed(1)+'" stroke="#bbb" stroke-dasharray="3,3"/>';
+  let pts=''; for(let i=0;i<n;i++){ pts+=x(i).toFixed(1)+','+y(vals[i]).toFixed(1)+' '; }
+  const last=vals[n-1], col=last>=0?'#e53935':'#2e7d32';
+  const areaPts=padL+','+zy.toFixed(1)+' '+pts+(W-padR).toFixed(1)+','+zy.toFixed(1);
+  let xlab=''; const step=Math.max(1,Math.floor(n/6));
+  for(let i=0;i<n;i+=step){ xlab+='<text x="'+x(i).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" font-size="10" fill="#999">'+slice[i].date.slice(5)+'</text>'; }
+  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" width="100%" preserveAspectRatio="xMidYMid meet">'+grid+
+    '<polygon points="'+areaPts+'" fill="'+col+'" opacity="0.08"/>'+
+    '<polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="2"/>'+xlab+'</svg>';
+}
+function renderTable(slice){
+  const tb=document.getElementById('tradeBody'); tb.innerHTML='';
+  const rows=slice.slice().reverse();
+  for(const d of rows){
+    const ops=[];
+    for(const b of d.buy) ops.push(['买',b]);
+    for(const s of d.sell) ops.push(['卖',s]);
+    if(!ops.length) ops.push(['持',null]);
+    for(const op of ops){
+      const act=op[0], item=op[1];
+      if(act==='持'){ const holds=d.hold.map(h=>h.name+'('+h.code+')').join('、')||'空仓';
+        tb.innerHTML+='<tr><td>'+d.date+'</td><td style="color:#888">持有</td><td colspan="4">'+holds+'</td></tr>'; }
+      else { const color=act==='买'?'#e53935':'#2e7d32';
+        tb.innerHTML+='<tr><td>'+d.date+'</td><td style="color:'+color+';font-weight:700">'+act+'</td><td>'+item.code+'</td><td>'+item.name+'</td><td>'+item.shares+'</td><td>'+item.price+'</td></tr>'; }
+    }
+  }
+  if(!rows.length) tb.innerHTML='<tr><td colspan="6" style="color:#999">该区间无数据</td></tr>';
+}
+function update(which){
+  const slice=getRange(which); const s=computeStats(slice);
+  if(s){
+    const tEl=document.getElementById('stTotal'); tEl.textContent=fmtPct(s.totalRet);
+    tEl.style.color=s.totalRet>=0?'#e53935':'#2e7d32';
+    document.getElementById('stEquity').textContent=fmtMoney(s.endEq);
+    document.getElementById('stCagr').textContent=fmtPct(s.cagr);
+    document.getElementById('stMdd').textContent=fmtPct(s.mdd);
+    document.getElementById('stSharpe').textContent=s.sharpe.toFixed(2);
+    document.getElementById('stWin').textContent=fmtPct(s.winRate);
+    document.getElementById('stRange').textContent=slice.length?slice[0].date:'-';
+    document.getElementById('stRange2').textContent=slice.length?slice[slice.length-1].date:'-';
+  }
+  drawChart(slice); renderTable(slice);
+}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.pbtn').forEach(function(b){ b.addEventListener('click',function(){ if(b.id==='applyCustom')return; document.querySelectorAll('.pbtn').forEach(x=>x.classList.remove('on')); b.classList.add('on'); update(b.dataset.r); }); });
+  document.getElementById('applyCustom').addEventListener('click',function(){ document.querySelectorAll('.pbtn').forEach(x=>x.classList.remove('on')); update('custom'); });
+  update('month');
+});
+'''
+    stats_json = json.dumps(stats if stats else {"params": {}, "daily": [], "summary": {}}, ensure_ascii=False)
+    stats_block = stats_head + "const STATS = " + stats_json + ";\n" + stats_js_body + "</script>"
+    html = html.replace('___STATS_BLOCK___', stats_block)
+
     with open(os.path.join(SCRIPT_DIR, 'index.html'), 'w', encoding='utf-8') as f:
         f.write(html)
     logger.info(f"已写 SIGNAL.md / index.html（{bj}，合格{len(eligible)}只，覆盖{ok}/{len(ETF_POOL)}）")
+
+def append_history(date_str, regime, dyn, m_eff, prev, new, prices):
+    """把当天信号（prev/new 持仓 + 当日现价）追加进 history.json，按日期去重。"""
+    hist = []
+    if os.path.exists(HISTORY_FILE):
+        try:
+            hist = json.load(open(HISTORY_FILE, encoding='utf-8'))
+        except Exception:
+            hist = []
+    hist = [h for h in hist if h.get('date') != date_str]
+    hist.append({
+        'date': date_str, 'regime': regime, 'dyn': dyn, 'm_eff': m_eff,
+        'prev': prev, 'new': new, 'prices': prices,
+    })
+    hist.sort(key=lambda x: x['date'])
+    json.dump(hist, open(HISTORY_FILE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    logger.info(f"已记录历史（{date_str}，累计 {len(hist)} 天）")
+
+
+def _simulate_portfolio(hist):
+    """从初始资金出发，按每日 prev→new 的买卖还原净值曲线（含滑点+佣金）。"""
+    capital = TOTAL_CAPITAL
+    cash = capital
+    holdings = {}        # code -> shares
+    daily = []
+    for rec in hist:
+        date = rec['date']
+        prev = rec.get('prev', {}) or {}
+        new = rec.get('new', {}) or {}
+        prices = rec.get('prices', {}) or {}
+        buys, sells = [], []
+        # 卖出：prev 有、new 无
+        for code, pos in prev.items():
+            if code not in new:
+                px = prices.get(code, pos.get('buy_price', 0)) or 0
+                sh = pos.get('shares', 0) or 0
+                if px > 0 and sh > 0:
+                    proceeds = sh * px * (1 - SLIPPAGE_RATE)
+                    comm = proceeds * COMMISSION_RATE
+                    cash += proceeds - comm
+                    sells.append({'code': code, 'name': pos.get('name', code),
+                                  'shares': sh, 'price': round(px, 4),
+                                  'amount': round(proceeds - comm, 2)})
+                holdings.pop(code, None)
+        # 买入：new 有、prev 无
+        for code, pos in new.items():
+            if code not in prev:
+                px = prices.get(code, pos.get('buy_price', 0)) or 0
+                sh = pos.get('shares', 0) or 0
+                if px > 0 and sh > 0:
+                    cost = sh * px * (1 + SLIPPAGE_RATE)
+                    comm = cost * COMMISSION_RATE
+                    cash -= (cost + comm)
+                    holdings[code] = sh
+                    buys.append({'code': code, 'name': pos.get('name', code),
+                                 'shares': sh, 'price': round(px, 4),
+                                 'amount': round(cost + comm, 2)})
+        # 净值（按当日现价盯市）
+        eq = cash
+        hold_list = []
+        for code, sh in holdings.items():
+            px = prices.get(code, 0) or 0
+            eq += sh * px
+            hold_list.append({'code': code,
+                              'name': (new.get(code) or {}).get('name', code),
+                              'shares': sh, 'price': round(px, 4)})
+        daily.append({'date': date, 'equity': round(eq, 2),
+                      'buy': buys, 'sell': sells, 'hold': hold_list,
+                      'regime': rec.get('regime')})
+    # 每日收益 / 累计收益 / 前一日净值
+    prev_eq = capital
+    for d in daily:
+        d['equity_prev'] = round(prev_eq, 2)
+        d['ret'] = (d['equity'] / prev_eq - 1) if prev_eq > 0 else 0.0
+        d['cumret'] = (d['equity'] / capital - 1)
+        prev_eq = d['equity']
+    return daily, capital
+
+
+def _summarize(daily, capital):
+    if not daily:
+        return {}
+    eqs = [d['equity'] for d in daily]
+    start_eq = daily[0]['equity_prev']
+    end_eq = daily[-1]['equity']
+    total_ret = end_eq / start_eq - 1 if start_eq > 0 else 0
+    peak = eqs[0]; mdd = 0.0
+    for e in eqs:
+        if e > peak:
+            peak = e
+        dd = e / peak - 1
+        if dd < mdd:
+            mdd = dd
+    rets = [d['ret'] for d in daily if d['equity_prev'] > 0]
+    mean = sum(rets) / len(rets) if rets else 0
+    var = sum((r - mean) ** 2 for r in rets) / len(rets) if rets else 0
+    std = var ** 0.5
+    sharpe = (mean / std * (252 ** 0.5)) if std > 0 else 0.0
+    win = sum(1 for r in rets if r > 0)
+    win_rate = win / len(rets) if rets else 0
+    from datetime import datetime as _dt
+    d0 = _dt.strptime(daily[0]['date'], '%Y-%m-%d')
+    d1 = _dt.strptime(daily[-1]['date'], '%Y-%m-%d')
+    days = max((d1 - d0).days, 1)
+    cagr = ((end_eq / start_eq) ** (365.0 / days) - 1) if start_eq > 0 and end_eq > 0 else 0
+    trades = sum(len(d['buy']) + len(d['sell']) for d in daily)
+    return {'total_ret': total_ret, 'equity': end_eq, 'max_dd': mdd,
+            'sharpe': sharpe, 'win_rate': win_rate, 'cagr': cagr,
+            'days': len(daily), 'trades': trades}
+
+
+def build_stats():
+    """读 history.json，模拟净值，生成 stats.json 并返回 dict。"""
+    hist = []
+    if os.path.exists(HISTORY_FILE):
+        try:
+            hist = json.load(open(HISTORY_FILE, encoding='utf-8'))
+        except Exception:
+            hist = []
+    start = hist[0]['date'] if hist else _bj_now().strftime('%Y-%m-%d')
+    daily, capital = _simulate_portfolio(hist)
+    summary = _summarize(daily, capital) if daily else {}
+    out = {
+        'params': {'commission': COMMISSION_RATE, 'slippage': SLIPPAGE_RATE,
+                   'capital': capital, 'start': start},
+        'daily': daily,
+        'summary': summary,
+    }
+    try:
+        json.dump(out, open(STATS_FILE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    except Exception as e:
+        logger.warning(f"写 stats.json 失败: {e}")
+    return out
+
 
 def run_cloud_once():
     """云端单次运行：抓行情→算信号→写报告。"""
@@ -642,7 +922,17 @@ def run_cloud_once():
                 }
                 logger.info("无合格标的，建议切换防御ETF(银华日利)")
 
-    write_signal_report(regime, dynamic_max_score, m_eff, eligible, targets, prev_positions, new_positions, quotes)
+    # ---- 记录历史 + 统计 ----
+    date_str = _bj_now().strftime('%Y-%m-%d')
+    snap_prices = {}
+    for code in set(prev_positions.keys()) | set(new_positions.keys()):
+        q = quotes.get(code)
+        if q and q.get('current_price'):
+            snap_prices[code] = q['current_price']
+    append_history(date_str, regime, dynamic_max_score, m_eff, prev_positions, new_positions, snap_prices)
+    stats = build_stats()
+
+    write_signal_report(regime, dynamic_max_score, m_eff, eligible, targets, prev_positions, new_positions, quotes, stats)
     save_positions(new_positions)
     logger.info("云端信号已写入 SIGNAL.md / index.html，持仓已记录")
 
