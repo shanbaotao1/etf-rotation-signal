@@ -48,6 +48,10 @@ TOTAL_CAPITAL = 50000
 COMMISSION_RATE = 0.00005   # 交易佣金：万分之0.5（=0.005%），无最低5元限制
 SLIPPAGE_RATE   = 0.001     # 滑点：单边 0.1%（买价×(1+滑点)，卖价×(1-滑点)）；可按需修改
 
+# 基准对比代码（网页统计用）：沪深300ETF（159300）
+BENCHMARK_INDEX = "159300.XSHE"   # 沪深300ETF（与策略选股同为ETF，便于直接对比）
+BENCHMARK_NAME  = "沪深300"
+
 # ================== 云端模式（GitHub Actions 用） ==================
 # 设为 "1" 时：跳过本地 PanWatch，改用新浪/东财公开行情；单次计算并写 SIGNAL.md。
 CLOUD_MODE = os.environ.get("CLOUD_MODE", "0") == "1"
@@ -591,7 +595,7 @@ ___STATS_BLOCK___
     slipp_pct = SLIPPAGE_RATE * 100
     stats_head = f"""
 <div class="card" style="margin-top:14px">
-  <h3>📊 收益统计（含滑点 {slipp_pct:.2f}% + 佣金万0.5，无最低5元）</h3>
+  <h3>📊 收益统计（含滑点 {slipp_pct:.2f}% + 佣金万0.5，无最低5元）｜ 基准：{BENCHMARK_NAME}</h3>
   <div class="stbig">累计收益 <span id="stTotal">—</span> ｜ 当前净值 <span id="stEquity">—</span></div>
   <div class="chips">
     <div class="chip"><span>区间</span><b><span id="stRange">—</span> ~ <span id="stRange2">—</span></b></div>
@@ -599,6 +603,9 @@ ___STATS_BLOCK___
     <div class="chip"><span>最大回撤</span><b id="stMdd">—</b></div>
     <div class="chip"><span>夏普</span><b id="stSharpe">—</b></div>
     <div class="chip"><span>胜率</span><b id="stWin">—</b></div>
+    <div class="chip"><span>{BENCHMARK_NAME}收益</span><b id="stIdx">—</b></div>
+    <div class="chip"><span>超额收益</span><b id="stAlpha">—</b></div>
+    <div class="chip"><span>{BENCHMARK_NAME}回撤</span><b id="stIdxMdd">—</b></div>
   </div>
   <div class="pbar">
     <button class="pbtn" data-r="week">本周</button>
@@ -634,7 +641,17 @@ function computeStats(slice){
   const days=Math.max((d1-d0)/86400000,1);
   const cagr=Math.pow(endEq/startEq,365/days)-1;
   const trades=slice.reduce((a,d)=>a+d.buy.length+d.sell.length,0);
-  return {totalRet,endEq,mdd,sharpe,winRate,cagr,trades};
+  // ---- 基准（沪深300） ----
+  const hasIdx = slice.length && slice.every(d=>d.idx_cumret!==undefined && d.idx_cumret!==null);
+  let idxTotalRet=null, idxMdd=null, alpha=null;
+  if(hasIdx){
+    idxTotalRet = slice[slice.length-1].idx_cumret;
+    let pk=1+slice[0].idx_cumret, pmdd=0;
+    for(const d of slice){ const v=1+d.idx_cumret; if(v>pk)pk=v; const dd=v/pk-1; if(dd<pmdd)pmdd=dd; }
+    idxMdd=pmdd;
+    alpha=totalRet - idxTotalRet;
+  }
+  return {totalRet,endEq,mdd,sharpe,winRate,cagr,trades, idxTotalRet, idxMdd, alpha};
 }
 function getRange(which){
   const all=STATS.daily; if(!all.length) return [];
@@ -649,9 +666,12 @@ function getRange(which){
 function drawChart(slice){
   const el=document.getElementById('chart');
   if(!slice.length){el.innerHTML='<p style="color:#999">暂无数据</p>';return;}
-  const W=700,H=240,padL=46,padR=14,padT=16,padB=28;
+  const W=700,H=250,padL=46,padR=14,padT=26,padB=28;
   const vals=slice.map(d=>d.cumret*100);
+  const idxVals=slice.map(d=>(d.idx_cumret===undefined||d.idx_cumret===null)?null:d.idx_cumret*100);
+  const hasIdx = idxVals.some(v=>v!==null);
   let mn=Math.min.apply(null,vals.concat([0])), mx=Math.max.apply(null,vals.concat([0]));
+  if(hasIdx){ for(const v of idxVals){ if(v!==null){ if(v<mn)mn=v; if(v>mx)mx=v; } } }
   if(mx-mn<0.5){mx+=0.5;mn-=0.5;}
   const n=slice.length;
   const x=i=> padL+(n<=1?0:i*(W-padL-padR)/(n-1));
@@ -665,10 +685,16 @@ function drawChart(slice){
   let pts=''; for(let i=0;i<n;i++){ pts+=x(i).toFixed(1)+','+y(vals[i]).toFixed(1)+' '; }
   const last=vals[n-1], col=last>=0?'#e53935':'#2e7d32';
   const areaPts=padL+','+zy.toFixed(1)+' '+pts+(W-padR).toFixed(1)+','+zy.toFixed(1);
+  let idxPts=''; for(let i=0;i<n;i++){ if(idxVals[i]!==null) idxPts+=x(i).toFixed(1)+','+y(idxVals[i]).toFixed(1)+' '; }
   let xlab=''; const step=Math.max(1,Math.floor(n/6));
   for(let i=0;i<n;i+=step){ xlab+='<text x="'+x(i).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" font-size="10" fill="#999">'+slice[i].date.slice(5)+'</text>'; }
-  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" width="100%" preserveAspectRatio="xMidYMid meet">'+grid+
+  let legend='<rect x="'+padL+'" y="6" width="11" height="11" fill="'+col+'"/>'+
+             '<text x="'+(padL+15)+'" y="15" font-size="11" fill="#444">策略</text>';
+  if(hasIdx) legend+='<rect x="'+(padL+70)+'" y="6" width="11" height="11" fill="#1565c0"/>'+
+             '<text x="'+(padL+85)+'" y="15" font-size="11" fill="#444">'+STATS.params.benchmark_name+'</text>';
+  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" width="100%" preserveAspectRatio="xMidYMid meet">'+legend+grid+
     '<polygon points="'+areaPts+'" fill="'+col+'" opacity="0.08"/>'+
+    (hasIdx?'<polyline points="'+idxPts+'" fill="none" stroke="#1565c0" stroke-width="2" stroke-dasharray="5,3"/>':'')+
     '<polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="2"/>'+xlab+'</svg>';
 }
 function renderTable(slice){
@@ -701,6 +727,15 @@ function update(which){
     document.getElementById('stWin').textContent=fmtPct(s.winRate);
     document.getElementById('stRange').textContent=slice.length?slice[0].date:'-';
     document.getElementById('stRange2').textContent=slice.length?slice[slice.length-1].date:'-';
+    const ie=document.getElementById('stIdx'), ae=document.getElementById('stAlpha'), ime=document.getElementById('stIdxMdd');
+    if(s.idxTotalRet!==null && s.idxTotalRet!==undefined){
+      ie.textContent=fmtPct(s.idxTotalRet); ie.style.color=s.idxTotalRet>=0?'#e53935':'#2e7d32';
+      ae.textContent=fmtPct(s.alpha); ae.style.color=s.alpha>=0?'#e53935':'#2e7d32';
+      ime.textContent=fmtPct(s.idxMdd); ime.style.color='#1565c0';
+    } else {
+      ie.textContent='—'; ae.textContent='—'; ime.textContent='—';
+      ie.style.color='#666'; ae.style.color='#666'; ime.style.color='#666';
+    }
   }
   drawChart(slice); renderTable(slice);
 }
@@ -831,6 +866,71 @@ def _summarize(daily, capital):
             'days': len(daily), 'trades': trades}
 
 
+def fetch_index_klines(code, limit=260):
+    """获取指数日K（带日期），返回 [{date, close}]。新浪主 + 东财兜底。"""
+    num = code.split('.')[0]
+    market = 'sh' if code.endswith('XSHG') else 'sz'
+    symbol = f"{market}{num}"
+    try:
+        url = (f"https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/"
+               f"CN_MarketData.getKLineData?symbol={symbol}&scale=240&datalen={limit}&ma=no")
+        r = requests.get(url, timeout=12)
+        arr = r.json()
+        out = []
+        for item in arr:
+            close = float(item['close'])
+            if close <= 0:
+                continue
+            out.append({'date': item['day'], 'close': close})
+        if out:
+            return out
+    except Exception as e:
+        logger.debug(f"新浪指数K线 {code} 失败: {e}")
+    try:
+        url2 = ("https://push2his.eastmoney.com/api/qt/stock/kline/get"
+                f"?secid={_em_secid(code)}&fields1=f1,f2,f3,f4,f5,f6"
+                "&fields2=f51,f53&klt=101&fqt=1&end=20500101"
+                f"&lmt={limit}")
+        r = requests.get(url2, timeout=12)
+        kl = r.json().get('data', {}).get('klines', [])
+        out = []
+        for row in kl:
+            p = row.split(',')
+            close = float(p[1])   # f53 = 收盘
+            if close <= 0:
+                continue
+            out.append({'date': p[0], 'close': close})
+        return out
+    except Exception as e:
+        logger.debug(f"东财指数K线 {code} 失败: {e}")
+    return []
+
+
+def fetch_benchmark_closes(start_date, end_date):
+    """获取基准指数（沪深300）在 [start,end] 区间的 {date: close} 字典。"""
+    out = {}
+    try:
+        d0 = datetime.strptime(start_date, '%Y-%m-%d')
+        d1 = datetime.strptime(end_date, '%Y-%m-%d')
+        limit = max(60, int((d1 - d0).days / 1.4) + 30)
+        for k in fetch_index_klines(BENCHMARK_INDEX, limit):
+            out[k['date']] = k['close']
+    except Exception as e:
+        logger.warning(f"获取基准指数({BENCHMARK_NAME})失败: {e}")
+    return out
+
+
+def _nearest_index_close(sorted_items, target_date):
+    """sorted_items: [(date,close) ascending]。返回 ≤ target_date 的最近收盘。"""
+    res = None
+    for d, c in sorted_items:
+        if d <= target_date:
+            res = c
+        else:
+            break
+    return res
+
+
 def build_stats():
     """读 history.json，模拟净值，生成 stats.json 并返回 dict。"""
     hist = []
@@ -841,10 +941,47 @@ def build_stats():
             hist = []
     start = hist[0]['date'] if hist else _bj_now().strftime('%Y-%m-%d')
     daily, capital = _simulate_portfolio(hist)
+
+    # ---- 基准对比：沪深300 累计收益（以首个策略日为基准起点） ----
+    if daily:
+        start_d = daily[0]['date']
+        end_d = daily[-1]['date']
+        closes_map = fetch_benchmark_closes(start_d, end_d)
+        if closes_map:
+            sorted_items = sorted(closes_map.items())
+            base_close = _nearest_index_close(sorted_items, start_d)
+            if base_close:
+                for d in daily:
+                    c = _nearest_index_close(sorted_items, d['date'])
+                    d['idx_cumret'] = (c / base_close - 1) if c else None
+            else:
+                for d in daily:
+                    d['idx_cumret'] = None
+        else:
+            for d in daily:
+                d['idx_cumret'] = None
+
     summary = _summarize(daily, capital) if daily else {}
+    # 汇总里补基准字段
+    if daily:
+        valid = [d for d in daily if d.get('idx_cumret') is not None]
+        if valid:
+            summary['idx_total_ret'] = valid[-1]['idx_cumret']
+            pk = 1 + valid[0]['idx_cumret']
+            idx_mdd = 0.0
+            for d in valid:
+                v = 1 + d['idx_cumret']
+                if v > pk:
+                    pk = v
+                dd = v / pk - 1
+                if dd < idx_mdd:
+                    idx_mdd = dd
+            summary['idx_max_dd'] = idx_mdd
+            summary['idx_alpha'] = (summary.get('total_ret', 0) - valid[-1]['idx_cumret'])
     out = {
         'params': {'commission': COMMISSION_RATE, 'slippage': SLIPPAGE_RATE,
-                   'capital': capital, 'start': start},
+                   'capital': capital, 'start': start,
+                   'benchmark': BENCHMARK_INDEX, 'benchmark_name': BENCHMARK_NAME},
         'daily': daily,
         'summary': summary,
     }
