@@ -1,0 +1,46 @@
+{
+ "params": {
+  "commission": 5e-05,
+  "slippage": 0.001,
+  "capital": 50000,
+  "start": "2026-07-23"
+ },
+ "daily": [
+  {
+   "date": "2026-07-23",
+   "equity": 49947.71,
+   "buy": [
+    {
+     "code": "159985.XSHE",
+     "name": "豆粕ETF",
+     "shares": 22200,
+     "price": 2.243,
+     "amount": 49846.89
+    }
+   ],
+   "sell": [],
+   "hold": [
+    {
+     "code": "159985.XSHE",
+     "name": "豆粕ETF",
+     "shares": 22200,
+     "price": 2.243
+    }
+   ],
+   "regime": "bear",
+   "equity_prev": 50000,
+   "ret": -0.0010457999999999856,
+   "cumret": -0.0010457999999999856
+  }
+ ],
+ "summary": {
+  "total_ret": -0.0010457999999999856,
+  "equity": 49947.71,
+  "max_dd": 0.0,
+  "sharpe": 0.0,
+  "win_rate": 0.0,
+  "cagr": -0.31744811926936656,
+  "days": 1,
+  "trades": 1
+ }
+}
