@@ -2,10 +2,19 @@ name: ETF 双策略信号（云端）
 
 on:
   schedule:
-    # 北京时间 13:30 = UTC 05:30；周一至周五
+    # 北京时间 13:10 = UTC 05:10（交易+按13:10价建仓）
     - cron: '10 5 * * 1-5'
+    # 北京时间 15:10 = UTC 07:10（收盘结算：用收盘价重算当日净值，不交易）
+    - cron: '10 7 * * 1-5'
   # 允许在 GitHub 网页上手动触发（Actions 标签 → Run workflow）
+  # 手动触发时可勾选「收盘结算」直接跑结算模式
   workflow_dispatch:
+    inputs:
+      settle:
+        description: '收盘结算模式（用收盘价重算当日净值，不交易）'
+        required: false
+        default: 'false'
+        type: boolean
 
 permissions:
   contents: write
@@ -14,6 +23,10 @@ jobs:
   signal:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    env:
+      CLOUD_MODE: "1"
+      # 15:10 定时 或 手动勾选「收盘结算」时进入结算模式，其余为正常交易
+      SETTLE: ${{ github.event.schedule == '10 7 * * 1-5' && '1' || (github.event.inputs.settle == true && '1' || '0') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,13 +42,13 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: 运行策略一：轮动V1（单持仓）
-        # CLOUD_MODE=1 时脚本跳过本地 PanWatch，改用新浪/东财公开行情
+        # SETTLE=1 时进入收盘结算（仅重算净值），否则正常决策+按13:10价交易
         continue-on-error: true
-        run: CLOUD_MODE=1 python etf_rotation_1.py
+        run: CLOUD_MODE=1 SETTLE=$SETTLE python etf_rotation_1.py
 
       - name: 运行策略二：五福v1.1（多持仓）
         continue-on-error: true
-        run: python wufu_cloud.py
+        run: SETTLE=$SETTLE python wufu_cloud.py
 
       - name: 生成双策略对比页
         run: python build_compare_page.py
@@ -49,7 +62,6 @@ jobs:
                    positions_wufu.json history_wufu.json stats_wufu.json; do
             [ -f "$f" ] && git add "$f"
           done
-          true
           if git diff --cached --quiet; then
             echo "无变化，跳过提交"
           else
