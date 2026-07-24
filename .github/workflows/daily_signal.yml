@@ -3,7 +3,7 @@ name: ETF 双策略信号（云端）
 on:
   schedule:
     # 北京时间 13:30 = UTC 05:30；周一至周五
-    - cron: '30 5 * * 1-5'
+    - cron: '10 5 * * 1-5'
   # 允许在 GitHub 网页上手动触发（Actions 标签 → Run workflow）
   workflow_dispatch:
 
