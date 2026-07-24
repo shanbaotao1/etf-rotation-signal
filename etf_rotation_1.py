@@ -1098,15 +1098,27 @@ def settle_cloud():
     new = rec.get('new', {}) or {}
     prev = rec.get('prev', {}) or {}
     codes = list(set(new.keys()) | set(prev.keys()))
-    quotes = get_quotes_cloud(codes)
-    if not quotes:
+    # 优先用当日日K官方收盘价（收盘后最权威），失败再回退实时行情
+    close_prices = {}
+    try:
+        kl = fetch_klines_cloud(codes, limit=3)
+        for c in codes:
+            arr = kl.get(c)
+            if arr:
+                close = arr[-1].get('close')
+                if close and close > 0:
+                    close_prices[c] = close
+    except Exception as e:
+        logger.warning(f"取收盘价K线失败: {e}")
+    if not close_prices:
+        quotes = get_quotes_cloud(codes)
+        for c in codes:
+            q = quotes.get(c)
+            if q and q.get('current_price'):
+                close_prices[c] = q['current_price']
+    if not close_prices:
         logger.warning("无法获取收盘价，跳过结算")
         return
-    close_prices = {}
-    for c in codes:
-        q = quotes.get(c)
-        if q and q.get('current_price'):
-            close_prices[c] = q['current_price']
     rec['close_prices'] = close_prices
     hist[-1] = rec
     json.dump(hist, open(HISTORY_FILE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
