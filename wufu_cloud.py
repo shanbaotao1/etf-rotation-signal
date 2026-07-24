@@ -9,10 +9,11 @@
 - 固定池内嵌自 5f_rbq2025.py（global 21 + china 97，去重约 114 只）
 - 数据源：东财/新浪公开行情（云端无内网 PanWatch，用公开源替代）
 - 成本模型与轮动V1 统一：佣金万0.5（无最低5元）+ 单边0.1%滑点
-- 每个交易日 13:30 由 GitHub Actions 调用，更新：
-    history_wufu.json / stats_wufu.json / positions_wufu.json
-- 最后更新: 2026-07-23 (v2)
-- 本次改动: 买卖改为100股整手（与轮动V1口径一致）；清仓单可含零股全卖
+- 每个交易日 13:10（北京时间）由 GitHub Actions 调用决策+按13:10价交易；
+  15:10 再次调用（SETTLE=1）仅用收盘价重算当日净值/收益，不改变持仓
+- 最后更新: 2026-07-24 (v3)
+- 本次改动: 加"收盘结算"模式(SETTLE=1)：不交易，只用收盘价重算当日净值与
+  收益率；网页收盘后为"13:10买卖价 + 当日收盘价"口径。买卖保持100股整手
 ---------------------------------------------------------------------
 已知近似（不影响未来对比公平性）：
 1. 动态池（回测里取全市场成交前150）云端改为只用固定池——固定池已覆盖商品/海外/
@@ -904,6 +905,9 @@ def _summarize(daily, capital):
 
 # ==================== 主流程 ====================
 def run_once():
+    if os.environ.get('SETTLE') == '1':
+        settle_last_day()
+        return
     today = _bj_now()
     today_str = today.strftime('%Y-%m-%d')
     if today.weekday() >= 5:
@@ -1020,6 +1024,63 @@ def append_stats(rec):
         'summary': summary,
     }
     json.dump(out, open(STATS_FILE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+
+
+def settle_last_day():
+    """收盘结算（SETTLE=1）：不交易，只用收盘价重算当日净值与收益率。
+    覆盖当日 13:10 的盘中估值，使网页收盘后反映"13:10买卖价+当日收盘价"口径。"""
+    today = _bj_now()
+    today_str = today.strftime('%Y-%m-%d')
+    if today.weekday() >= 5:
+        _log(f"周末({today_str})，跳过结算")
+        return
+    pos_state = load_positions()
+    positions = pos_state.get('positions', {})
+    cash = pos_state.get('cash', INIT_CAPITAL)
+    if not positions:
+        _log("无持仓，无需收盘结算")
+        return
+    quotes = get_quotes_cloud(list(positions.keys()))
+    if not quotes:
+        _log("无法获取收盘行情，跳过结算")
+        return
+    eq = cash
+    hold = []
+    for c, sh in positions.items():
+        q = quotes.get(c)
+        px = q.get('current_price', 0) if q else 0
+        if px > 0:
+            eq += sh * px
+            hold.append({'code': c, 'name': NAME_CACHE.get(c, c),
+                         'shares': round(sh, 2), 'price': round(px, 4)})
+    daily = []
+    if os.path.exists(STATS_FILE):
+        try:
+            daily = json.load(open(STATS_FILE, encoding='utf-8')).get('daily', [])
+        except Exception:
+            daily = []
+    if daily and daily[-1]['date'] == today_str:
+        daily[-1]['equity'] = round(eq, 2)
+        daily[-1]['hold'] = hold
+        # 重算整条曲线的 ret / cumret（仅末日变更，重算即可）
+        prev_eq = INIT_CAPITAL
+        for d in daily:
+            d['equity_prev'] = round(prev_eq, 2)
+            d['ret'] = (d['equity'] / prev_eq - 1) if prev_eq > 0 else 0.0
+            d['cumret'] = (d['equity'] / INIT_CAPITAL - 1)
+            prev_eq = d['equity']
+        summary = _summarize(daily, INIT_CAPITAL)
+        out = {
+            'params': {'commission': COMMISSION_RATE, 'slippage': SLIPPAGE_RATE,
+                       'capital': INIT_CAPITAL, 'start': daily[0]['date'] if daily else '',
+                       'strategy': '五福v1.1(多持仓)', 'cost_note': '与轮动V1统一:佣金万0.5+滑点0.1%'},
+            'daily': daily,
+            'summary': summary,
+        }
+        json.dump(out, open(STATS_FILE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+        _log(f"收盘结算 净值={eq:.2f} 持仓{len(hold)}")
+    else:
+        _log("今日无交易记录，无需结算")
 
 
 if __name__ == '__main__':
