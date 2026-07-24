@@ -763,10 +763,14 @@ def append_history(date_str, regime, dyn, m_eff, prev, new, prices):
             hist = []
     is_first = (len(hist) == 0)
     rec_prev = {} if is_first else prev   # 首日忽略历史持仓，统计/展示均视为“建仓买入”
+    # 保留已存在的收盘价（收盘结算填入的 close_prices，避免被交易模式重写覆盖）
+    old = next((h for h in hist if h.get('date') == date_str), None)
+    close_prices = (old or {}).get('close_prices') or {}
     hist = [h for h in hist if h.get('date') != date_str]
     hist.append({
         'date': date_str, 'regime': regime, 'dyn': dyn, 'm_eff': m_eff,
         'prev': rec_prev, 'new': new, 'prices': prices,
+        'close_prices': close_prices,
     })
     hist.sort(key=lambda x: x['date'])
     json.dump(hist, open(HISTORY_FILE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
