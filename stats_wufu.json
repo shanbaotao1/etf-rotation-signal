@@ -10,53 +10,61 @@
  "daily": [
   {
    "date": "2026-07-24",
-   "equity": 49947.65,
+   "equity": 49623.14,
    "regime": "weak",
    "defensive": false,
    "buy": [
     {
-     "code": "159985.XSHE",
-     "name": "豆粕ETF",
-     "shares": 11100,
-     "price": 2.243,
-     "amount": 24923.44
-    },
+     "code": "510880.XSHG",
+     "name": "红利ETF华泰柏瑞",
+     "shares": 7600,
+     "price": 3.223,
+     "amount": 24520.52
+    }
+   ],
+   "sell": [
     {
      "code": "512010.XSHG",
      "name": "医药ETF易方达",
      "shares": 66200,
-     "price": 0.377,
-     "amount": 24983.61
+     "price": 0.365,
+     "amount": 24137.63
+    },
+    {
+     "code": "159985.XSHE",
+     "name": "豆粕ETF",
+     "shares": 300,
+     "price": 2.29,
+     "amount": 686.28
     }
    ],
-   "sell": [],
    "hold": [
     {
      "code": "159985.XSHE",
      "name": "豆粕ETF",
-     "shares": 11100,
-     "price": 2.243
+     "shares": 10800,
+     "price": 2.29
     },
     {
-     "code": "512010.XSHG",
-     "name": "医药ETF易方达",
-     "shares": 66200,
-     "price": 0.377
+     "code": "510880.XSHG",
+     "name": "红利ETF华泰柏瑞",
+     "shares": 7600,
+     "price": 3.223
     }
    ],
    "equity_prev": 50000.0,
-   "ret": -0.0010470000000000201,
-   "cumret": -0.0010470000000000201
+   "ret": -0.007537200000000022,
+   "cumret": -0.007537200000000022
   }
  ],
  "summary": {
-  "total_ret": -0.0010470000000000201,
-  "equity": 49947.65,
+  "total_ret": -0.007537200000000022,
+  "equity": 49623.14,
   "max_dd": 0.0,
   "sharpe": 0.0,
   "win_rate": 0.0,
-  "cagr": -0.3177473245507967,
+  "cagr": -0.9368029783361305,
   "days": 1,
-  "trades": 2
+  "trades": 3
  }
 }
