@@ -13,31 +13,8 @@
    "equity": 49623.14,
    "regime": "weak",
    "defensive": false,
-   "buy": [
-    {
-     "code": "510880.XSHG",
-     "name": "红利ETF华泰柏瑞",
-     "shares": 7600,
-     "price": 3.223,
-     "amount": 24520.52
-    }
-   ],
-   "sell": [
-    {
-     "code": "512010.XSHG",
-     "name": "医药ETF易方达",
-     "shares": 66200,
-     "price": 0.365,
-     "amount": 24137.63
-    },
-    {
-     "code": "159985.XSHE",
-     "name": "豆粕ETF",
-     "shares": 300,
-     "price": 2.29,
-     "amount": 686.28
-    }
-   ],
+   "buy": [],
+   "sell": [],
    "hold": [
     {
      "code": "159985.XSHE",
@@ -65,6 +42,6 @@
   "win_rate": 0.0,
   "cagr": -0.9368029783361305,
   "days": 1,
-  "trades": 3
+  "trades": 0
  }
 }
