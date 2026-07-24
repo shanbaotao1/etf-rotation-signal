@@ -1040,15 +1040,30 @@ def settle_last_day():
     if not positions:
         _log("无持仓，无需收盘结算")
         return
-    quotes = get_quotes_cloud(list(positions.keys()))
-    if not quotes:
+    codes = list(positions.keys())
+    # 优先用当日日K官方收盘价（收盘后最权威），失败再回退实时行情
+    kl = fetch_klines_batch(codes, limit=3)
+    close_map = {}
+    for c in codes:
+        arr = kl.get(c)
+        if arr:
+            close = arr[-1].get('close')
+            if close and close > 0:
+                close_map[c] = close
+    if not close_map:
+        quotes = get_quotes_cloud(codes)
+        for c in codes:
+            q = quotes.get(c)
+            px = q.get('current_price', 0) if q else 0
+            if px > 0:
+                close_map[c] = px
+    if not close_map:
         _log("无法获取收盘行情，跳过结算")
         return
     eq = cash
     hold = []
     for c, sh in positions.items():
-        q = quotes.get(c)
-        px = q.get('current_price', 0) if q else 0
+        px = close_map.get(c, 0)
         if px > 0:
             eq += sh * px
             hold.append({'code': c, 'name': NAME_CACHE.get(c, c),
