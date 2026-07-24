@@ -11,9 +11,10 @@
 - 成本模型与轮动V1 统一：佣金万0.5（无最低5元）+ 单边0.1%滑点
 - 每个交易日 13:10（北京时间）由 GitHub Actions 调用决策+按13:10价交易；
   15:10 再次调用（SETTLE=1）仅用收盘价重算当日净值/收益，不改变持仓
-- 最后更新: 2026-07-24 (v3)
-- 本次改动: 加"收盘结算"模式(SETTLE=1)：不交易，只用收盘价重算当日净值与
-  收益率；网页收盘后为"13:10买卖价 + 当日收盘价"口径。买卖保持100股整手
+- 最后更新: 2026-07-24 (v4)
+- 本次改动: 持仓/买卖显示友好名称——内嵌 FIXED_NAMES 静态名称表 + code_name()
+  兜底（运行时行情名优先，结算时行情名为空回退静态表），解决15:10结算把13:10
+  写入的友好名覆盖成代码的问题
 ---------------------------------------------------------------------
 已知近似（不影响未来对比公平性）：
 1. 动态池（回测里取全市场成交前150）云端改为只用固定池——固定池已覆盖商品/海外/
@@ -216,6 +217,65 @@ WEAK_IDX = ['510300.XSHG', '510500.XSHG', '159915.XSHE', '512050.XSHG']
 # 额外需抓取的数据（货币ETF 511880 不在固定池内）
 EXTRA_FETCH = ['511880.XSHG']
 ALL_CODES = sorted(set(FIXED_POOL) | set(WEAK_IDX) | set(EXTRA_FETCH))
+
+# 静态名称表（数据源实拉，离线也能显示友好名，不依赖运行时行情）
+FIXED_NAMES = {
+    '159206.XSHE': '卫星ETF', '159218.XSHE': '卫星产业', '159227.XSHE': '航空航天',
+    '159256.XSHE': '创业软件', '159323.XSHE': '港股汽车', '159326.XSHE': '电网设备',
+    '159363.XSHE': '创业板AI', '159502.XSHE': '标普生科', '159509.XSHE': '纳指科技',
+    '159516.XSHE': '半导设备', '159518.XSHE': '标普油气', '159529.XSHE': '标普消费',
+    '159566.XSHE': '储能电池', '159583.XSHE': '通信设备', '159605.XSHE': '互联中概',
+    '159611.XSHE': '电力ETF', '159638.XSHE': '高端装备', '159667.XSHE': '工业母机',
+    '159732.XSHE': '消费电子', '159755.XSHE': '电池ETF', '159766.XSHE': '旅游ETF',
+    '159819.XSHE': 'AI智能', '159825.XSHE': '农业ETF', '159840.XSHE': '锂电池50',
+    '159851.XSHE': '金科ETF', '159852.XSHE': '软件ETF', '159865.XSHE': '养殖ETF',
+    '159869.XSHE': '游戏ETF', '159870.XSHE': '化工ETF', '159883.XSHE': '医疗器械',
+    '159892.XSHE': '恒生生物', '159915.XSHE': '创业板', '159928.XSHE': '消费ETF',
+    '159949.XSHE': '创业板50', '159967.XSHE': '创成长', '159980.XSHE': '有色ETF',
+    '159981.XSHE': '能源化工', '159985.XSHE': '豆粕ETF', '159992.XSHE': '创新药',
+    '159995.XSHE': '芯片ETF', '159998.XSHE': '计算机', '161226.XSHE': '白银基金',
+    '501018.XSHG': '南方原油LOF', '510300.XSHG': '沪深300ETF华泰柏瑞',
+    '510500.XSHG': '中证500ETF南方', '510760.XSHG': '上证指数ETF国泰',
+    '510880.XSHG': '红利ETF华泰柏瑞', '510900.XSHG': '恒生中国企业ETF易方达',
+    '511380.XSHG': '可转债ETF博时', '511880.XSHG': '银华日利ETF',
+    '512010.XSHG': '医药ETF易方达', '512050.XSHG': 'A500ETF华夏',
+    '512070.XSHG': '证券保险ETF易方达', '512100.XSHG': '中证1000ETF南方',
+    '512170.XSHG': '医疗ETF华宝', '512200.XSHG': '房地产ETF南方',
+    '512400.XSHG': '有色金属ETF南方', '512480.XSHG': '半导体ETF国联安',
+    '512660.XSHG': '军工ETF国泰', '512670.XSHG': '国防ETF鹏华', '512690.XSHG': '酒ETF鹏华',
+    '512710.XSHG': '军工龙头ETF富国', '512800.XSHG': '银行ETF华宝',
+    '512880.XSHG': '证券ETF国泰', '512890.XSHG': '红利低波ETF华泰柏瑞',
+    '512980.XSHG': '传媒ETF广发', '513030.XSHG': '德国ETF华安',
+    '513090.XSHG': '香港证券ETF易方达', '513100.XSHG': '纳指ETF国泰',
+    '513120.XSHG': '港股创新药ETF广发', '513180.XSHG': '恒生科技ETF华夏',
+    '513190.XSHG': '港股通金融ETF华夏', '513290.XSHG': '纳指生物科技ETF汇添富',
+    '513310.XSHG': '中韩半导体ETF华泰柏瑞', '513330.XSHG': '恒生互联网ETF华夏',
+    '513350.XSHG': '标普油气ETF富国', '513360.XSHG': '教育ETF博时',
+    '513400.XSHG': '道琼斯ETF鹏华', '513500.XSHG': '标普500ETF博时',
+    '513520.XSHG': '日经ETF华夏', '513630.XSHG': 'XD港股低波红利ETF摩根',
+    '513750.XSHG': '港股通非银ETF广发', '513920.XSHG': '港股通央企红利ETF华安',
+    '513970.XSHG': '恒生消费ETF景顺', '515030.XSHG': '新能源车ETF华夏',
+    '515050.XSHG': '通信ETF华夏', '515120.XSHG': '创新药ETF广发',
+    '515170.XSHG': '食品饮料ETF华夏', '515210.XSHG': '钢铁ETF国泰',
+    '515220.XSHG': '煤炭ETF国泰', '515400.XSHG': '大数据ETF富国',
+    '515790.XSHG': '光伏ETF华泰柏瑞', '515880.XSHG': '通信ETF国泰',
+    '515980.XSHG': '人工智能ETF华富', '516150.XSHG': '稀土ETF嘉实',
+    '516160.XSHG': '新能源ETF南方', '516190.XSHG': '传媒ETF华夏',
+    '516510.XSHG': '云计算ETF易方达', '516520.XSHG': '智能驾驶ETF华泰柏瑞',
+    '517520.XSHG': '黄金股ETF永赢', '518880.XSHG': '黄金ETF华安',
+    '520830.XSHG': '沙特ETF华泰柏瑞', '560860.XSHG': '工业有色ETF万家',
+    '561330.XSHG': '矿业ETF国泰', '561360.XSHG': '石油ETF国泰',
+    '561980.XSHG': '半导体设备ETF招商', '562500.XSHG': '机器人ETF华夏',
+    '562590.XSHG': '半导体设备ETF华夏', '562800.XSHG': '稀有金属ETF嘉实',
+    '563300.XSHG': '中证2000ETF华泰柏瑞', '588080.XSHG': '科创50ETF易方达',
+    '588170.XSHG': '科创半导体ETF华夏', '588200.XSHG': '科创芯片ETF嘉实',
+    '588220.XSHG': '科创100ETF鹏华', '588790.XSHG': '科创AIETF博时',
+}
+
+
+def code_name(code):
+    """返回友好名称：运行时行情名优先，否则用静态表，再否则回退代码。"""
+    return NAME_CACHE.get(code) or FIXED_NAMES.get(code) or code
 
 NAME_CACHE = {}   # code -> name（实时行情填充）
 
@@ -806,7 +866,7 @@ def execute_today(target, score_map, defensive, quotes, positions, cash, cost):
                 proceeds = sh * px * (1 - SLIPPAGE_RATE)
                 comm = proceeds * COMMISSION_RATE
                 cash += proceeds - comm
-                sells.append({'code': c, 'name': NAME_CACHE.get(c, c),
+                sells.append({'code': c, 'name': code_name(c),
                               'shares': round(sh, 2), 'price': round(px, 4),
                               'amount': round(proceeds - comm, 2)})
                 positions.pop(c, None)
@@ -841,7 +901,7 @@ def execute_today(target, score_map, defensive, quotes, positions, cash, cost):
             old = positions.get(c, 0)
             positions[c] = old + delta
             cost[c] = (cost.get(c, 0) * old + tot) / positions[c] if positions[c] > 0 else 0
-            buys.append({'code': c, 'name': NAME_CACHE.get(c, c),
+            buys.append({'code': c, 'name': code_name(c),
                          'shares': round(delta, 2), 'price': round(px, 4),
                          'amount': round(tot, 2)})
         else:
@@ -855,7 +915,7 @@ def execute_today(target, score_map, defensive, quotes, positions, cash, cost):
                 cost.pop(c, None)
             else:
                 cost[c] = cost.get(c, 0) * cur / positions[c]
-            sells.append({'code': c, 'name': NAME_CACHE.get(c, c),
+            sells.append({'code': c, 'name': code_name(c),
                           'shares': round(-delta, 2), 'price': round(px, 4),
                           'amount': round(net, 2)})
     # 盯市（按当日现价）
@@ -866,7 +926,7 @@ def execute_today(target, score_map, defensive, quotes, positions, cash, cost):
         px = q.get('current_price', 0) if q else 0
         if px > 0:
             eq += sh * px
-            hold.append({'code': c, 'name': NAME_CACHE.get(c, c),
+            hold.append({'code': c, 'name': code_name(c),
                          'shares': round(sh, 2), 'price': round(px, 4)})
     return positions, cash, cost, eq, buys, sells, hold
 
@@ -1066,7 +1126,7 @@ def settle_last_day():
         px = close_map.get(c, 0)
         if px > 0:
             eq += sh * px
-            hold.append({'code': c, 'name': NAME_CACHE.get(c, c),
+            hold.append({'code': c, 'name': code_name(c),
                          'shares': round(sh, 2), 'price': round(px, 4)})
     daily = []
     if os.path.exists(STATS_FILE):
