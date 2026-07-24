@@ -26,7 +26,7 @@ jobs:
     env:
       CLOUD_MODE: "1"
       # 15:10 定时 或 手动勾选「收盘结算」时进入结算模式，其余为正常交易
-      SETTLE: ${{ github.event.schedule == '10 7 * * 1-5' && '1' || (github.event.inputs.settle == true && '1' || '0') }}
+      SETTLE: ${{ github.event.schedule == '10 7 * * 1-5' && '1' || (github.event.inputs.settle == 'true' && '1' || '0') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
