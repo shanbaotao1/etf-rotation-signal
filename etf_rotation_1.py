@@ -812,11 +812,14 @@ def _simulate_portfolio(hist):
                     buys.append({'code': code, 'name': pos.get('name', code),
                                  'shares': sh, 'price': round(px, 4),
                                  'amount': round(cost + comm, 2)})
-        # 净值（按当日现价盯市）
+        # 净值（优先按当日收盘价盯市；无收盘价回退到交易快照价）
+        close_prices = rec.get('close_prices') or {}
         eq = cash
         hold_list = []
         for code, sh in holdings.items():
-            px = prices.get(code, 0) or 0
+            px = close_prices.get(code)
+            if px is None:
+                px = prices.get(code, 0) or 0
             eq += sh * px
             hold_list.append({'code': code,
                               'name': (new.get(code) or {}).get('name', code),
@@ -1075,6 +1078,36 @@ def run_cloud_once():
     write_signal_report(regime, dynamic_max_score, m_eff, eligible, targets, prev_positions, new_positions, quotes, stats)
     save_positions(new_positions)
     logger.info("云端信号已写入 SIGNAL.md / index.html，持仓已记录")
+
+
+def settle_cloud():
+    """收盘结算（SETTLE=1）：不交易，仅把今日 history 的收盘价补上，重算净值曲线。"""
+    today = _bj_now().strftime('%Y-%m-%d')
+    if not os.path.exists(HISTORY_FILE):
+        logger.warning("无 history.json，跳过结算")
+        return
+    hist = json.load(open(HISTORY_FILE, encoding='utf-8'))
+    if not hist or hist[-1]['date'] != today:
+        logger.info("今日无交易记录，无需收盘结算")
+        return
+    rec = hist[-1]
+    new = rec.get('new', {}) or {}
+    prev = rec.get('prev', {}) or {}
+    codes = list(set(new.keys()) | set(prev.keys()))
+    quotes = get_quotes_cloud(codes)
+    if not quotes:
+        logger.warning("无法获取收盘价，跳过结算")
+        return
+    close_prices = {}
+    for c in codes:
+        q = quotes.get(c)
+        if q and q.get('current_price'):
+            close_prices[c] = q['current_price']
+    rec['close_prices'] = close_prices
+    hist[-1] = rec
+    json.dump(hist, open(HISTORY_FILE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    build_stats()
+    logger.info(f"收盘结算完成，收盘价更新 {len(close_prices)} 只")
 
 # ================== K线获取（Baostock主 → PanWatch补 → Sina兜底） ==================
 def fetch_klines_all(symbols, limit=45):
@@ -1686,7 +1719,10 @@ def main():
     logger.info("=" * 60)
 
     if CLOUD_MODE:
-        run_cloud_once()
+        if os.environ.get('SETTLE') == '1':
+            settle_cloud()
+        else:
+            run_cloud_once()
         return
     ensure_cache()
 
