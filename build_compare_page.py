@@ -9,8 +9,8 @@ build_compare_page.py
   - 对照表：两策略 累计收益/年化/最大回撤/夏普/胜率/超额收益/交易次数
   - 各自每日买卖表
   - 区间选择（本周/本月/近30天/全部/自定义）
-- 最后更新: 2026-07-23
-- 本次改动: 新建合并对比页，让两个策略同台比收益
+- 最后更新: 2026-07-24
+- 本次改动: 单点策略也用圆点标记(可看到五福仅1天时的位置)；工作流定时改为13:10北京时间
 """
 import json, os, re
 from datetime import datetime, timezone, timedelta
@@ -286,8 +286,8 @@ def build_html(v1_stats, wf_stats, bj_str):
     "          '<text x=\"'+(padL-6)+'\" y=\"'+(yy+4).toFixed(1)+'\" text-anchor=\"end\" font-size=\"10\" fill=\"#999\">'+v.toFixed(1)+'%</text>'; }\n"
     "  const zy=y(0);\n"
     "  grid+='<line x1=\"'+padL+'\" y1=\"'+zy.toFixed(1)+'\" x2=\"'+(W-padR)+'\" y2=\"'+zy.toFixed(1)+'\" stroke=\"#bbb\" stroke-dasharray=\"3,3\"/>';\n"
-    "  function poly(arr,color,dash){ let pts=''; for(let i=0;i<n;i++){ if(arr[i]===null) continue; pts+=x(i).toFixed(1)+','+y(arr[i]).toFixed(1)+' '; }\n"
-    "    if(!pts) return ''; return '<polyline points=\"'+pts+'\" fill=\"none\" stroke=\"'+color+'\" stroke-width=\"2\" '+(dash?'stroke-dasharray=\"5,3\"':'')+'/>'; }\n"
+    "  function poly(arr,color,dash){ let pts=''; let marks=''; for(let i=0;i<n;i++){ if(arr[i]===null) continue; pts+=x(i).toFixed(1)+','+y(arr[i]).toFixed(1)+' '; marks+='<circle cx=\"'+x(i).toFixed(1)+'\" cy=\"'+y(arr[i]).toFixed(1)+'\" r=\"3\" fill=\"'+color+'\"/>'; }\n"
+    "    if(!pts) return marks; return '<polyline points=\"'+pts+'\" fill=\"none\" stroke=\"'+color+'\" stroke-width=\"2\" '+(dash?'stroke-dasharray=\"5,3\"':'')+'/>'+marks; }\n"
     "  let xlab=''; const step=Math.max(1,Math.floor(n/6));\n"
     "  for(let i=0;i<n;i+=step){ xlab+='<text x=\"'+x(i).toFixed(1)+'\" y=\"'+(H-8)+'\" text-anchor=\"middle\" font-size=\"10\" fill=\"#999\">'+rdates[i].slice(5)+'</text>'; }\n"
     "  let legend='<rect x=\"'+padL+'\" y=\"5\" width=\"11\" height=\"11\" fill=\"#e53935\"/>'+\n"
