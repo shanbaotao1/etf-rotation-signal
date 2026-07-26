@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>双策略对比 · 轮动V1 vs 五福</title>
+<title>三策略对比 · 轮动V1 vs 357ETF vs 五福</title>
 <style>
 * { box-sizing: border-box; }
 body { font-family: -apple-system, 'Segoe UI', 'Microsoft YaHei', sans-serif;
@@ -34,8 +34,8 @@ th { background:#fafafa; color:#666; font-weight:600; }
 .note { font-size:12px; color:#999; margin-top:8px; line-height:1.6; }
 </style></head>
 <body><div class="wrap">
-<h1>📈 双策略实盘对比 · 轮动V1 vs 五福</h1>
-<div class="sub">更新于 2026-07-24 21:30 ｜ 两策略均自 2026-07-23 起、初始资金 ¥50,000、成本统一（佣金万0.5无最低 + 单边0.1%滑点）｜ 基准：沪深300</div>
+<h1>📈 三策略实盘对比 · 轮动V1 vs 357ETF vs 五福</h1>
+<div class="sub">更新于 2026-07-26 09:13 ｜ 三策略均自 2026-07-23 起、初始资金 ¥50,000、成本统一（佣金万0.5无最低 + 单边0.1%滑点）｜ 基准：沪深300</div>
 
 <div class="card">
   <h3>📊 收益对照表（含成本，基准 沪深300）</h3>
@@ -45,6 +45,7 @@ th { background:#fafafa; color:#666; font-weight:600; }
     </tr></thead>
     <tbody>
       <tr><td>轮动V1</td><td id="cV1Ret">—</td><td id="cV1Cagr">—</td><td id="cV1Mdd">—</td><td id="cV1Sharpe">—</td><td id="cV1Win">—</td><td id="cV1Alpha">—</td><td id="cV1Tr">—</td></tr>
+      <tr><td>357ETF</td><td id="cS357Ret">—</td><td id="cS357Cagr">—</td><td id="cS357Mdd">—</td><td id="cS357Sharpe">—</td><td id="cS357Win">—</td><td id="cS357Alpha">—</td><td id="cS357Tr">—</td></tr>
       <tr><td>五福</td><td id="cWfRet">—</td><td id="cWfCagr">—</td><td id="cWfMdd">—</td><td id="cWfSharpe">—</td><td id="cWfWin">—</td><td id="cWfAlpha">—</td><td id="cWfTr">—</td></tr>
     </tbody>
   </table>
@@ -60,7 +61,7 @@ th { background:#fafafa; color:#666; font-weight:600; }
     <span class="cust">自定义 <input id="dfrom" type="date"> ~ <input id="dto" type="date"> <button id="applyCustom" class="pbtn">应用</button></span>
   </div>
   <div id="chart" style="margin-top:8px"></div>
-  <div class="note">* 超额收益 = 策略累计收益 − 沪深300累计收益（正=跑赢基准）。曲线：红=轮动V1，紫=五福，蓝虚线=沪深300。</div>
+  <div class="note">* 超额收益 = 策略累计收益 − 沪深300累计收益（正=跑赢基准）。曲线：红=轮动V1，橙=357ETF，紫=五福，蓝虚线=沪深300。</div>
 </div>
 
 <div class="card">
@@ -73,14 +74,19 @@ th { background:#fafafa; color:#666; font-weight:600; }
   <table><thead><tr><th>日期</th><th>方向</th><th>代码</th><th>名称</th><th>股数</th><th>价格</th></tr></thead><tbody id="tbWf"></tbody></table>
 </div>
 
+<div class="card">
+  <h3>357ETF · 每日买卖记录</h3>
+  <table><thead><tr><th>日期</th><th>方向</th><th>代码</th><th>名称</th><th>股数</th><th>价格</th></tr></thead><tbody id="tbS357"></tbody></table>
+</div>
+
 </div>
 <script>
-const DATA = {"v1": {"params": {"commission": 5e-05, "slippage": 0.001, "capital": 50000, "start": "2026-07-23", "benchmark": "159300.XSHE", "benchmark_name": "沪深300"}, "daily": [{"date": "2026-07-23", "equity": 49947.71, "buy": [{"code": "159985.XSHE", "name": "豆粕ETF", "shares": 22200, "price": 2.243, "amount": 49846.89}], "sell": [], "hold": [{"code": "159985.XSHE", "name": "豆粕ETF", "shares": 22200, "price": 2.243}], "regime": "bear", "equity_prev": 50000, "ret": -0.0010457999999999856, "cumret": -0.0010457999999999856, "idx_cumret": 0.0}, {"date": "2026-07-24", "equity": 50991.11, "buy": [], "sell": [], "hold": [{"code": "159985.XSHE", "name": "豆粕ETF", "shares": 22200, "price": 2.29}], "regime": "bear", "equity_prev": 49947.71, "ret": 0.02088984660157589, "cumret": 0.0198221999999999, "idx_cumret": -0.015655577299412915}], "summary": {"total_ret": 0.0198221999999999, "equity": 50991.11, "max_dd": 0.0, "sharpe": 14.360847418787591, "win_rate": 0.5, "cagr": 1291.4939265075068, "days": 2, "trades": 1, "idx_total_ret": -0.015655577299412915, "idx_max_dd": -0.015655577299412915, "idx_alpha": 0.035477777299412816}}, "wufu": {"params": {"commission": 5e-05, "slippage": 0.001, "capital": 50000.0, "start": "2026-07-24", "strategy": "五福v1.1(多持仓)", "cost_note": "与轮动V1统一:佣金万0.5+滑点0.1%"}, "daily": [{"date": "2026-07-24", "equity": 49623.14, "regime": "weak", "defensive": false, "buy": [], "sell": [], "hold": [{"code": "159985.XSHE", "name": "豆粕ETF", "shares": 10800, "price": 2.29}, {"code": "510880.XSHG", "name": "红利ETF华泰柏瑞", "shares": 7600, "price": 3.223}], "equity_prev": 50000.0, "ret": -0.007537200000000022, "cumret": -0.007537200000000022, "idx_cumret": 0.0}], "summary": {"total_ret": -0.007537200000000022, "equity": 49623.14, "max_dd": 0.0, "sharpe": 0.0, "win_rate": 0.0, "cagr": -0.9368029783361305, "days": 1, "trades": 0}}, "benchmark_index": "159300.XSHE", "benchmark_name": "沪深300", "updated": "2026-07-24 21:30"};
-const V1 = DATA.v1.daily, WF = DATA.wufu.daily;
+const DATA = {"v1": {"params": {"commission": 5e-05, "slippage": 0.001, "capital": 50000, "start": "2026-07-23", "benchmark": "159300.XSHE", "benchmark_name": "沪深300"}, "daily": [{"date": "2026-07-23", "equity": 49947.71, "buy": [{"code": "159985.XSHE", "name": "豆粕ETF", "shares": 22200, "price": 2.243, "amount": 49846.89}], "sell": [], "hold": [{"code": "159985.XSHE", "name": "豆粕ETF", "shares": 22200, "price": 2.243}], "regime": "bear", "equity_prev": 50000, "ret": -0.0010457999999999856, "cumret": -0.0010457999999999856, "idx_cumret": 0.0}, {"date": "2026-07-24", "equity": 50991.11, "buy": [], "sell": [], "hold": [{"code": "159985.XSHE", "name": "豆粕ETF", "shares": 22200, "price": 2.29}], "regime": "bear", "equity_prev": 49947.71, "ret": 0.02088984660157589, "cumret": 0.0198221999999999, "idx_cumret": -0.015655577299412915}], "summary": {"total_ret": 0.0198221999999999, "equity": 50991.11, "max_dd": 0.0, "sharpe": 14.360847418787591, "win_rate": 0.5, "cagr": 1291.4939265075068, "days": 2, "trades": 1, "idx_total_ret": -0.015655577299412915, "idx_max_dd": -0.015655577299412915, "idx_alpha": 0.035477777299412816}}, "wufu": {"params": {"commission": 5e-05, "slippage": 0.001, "capital": 50000.0, "start": "2026-07-24", "strategy": "五福v1.1(多持仓)", "cost_note": "与轮动V1统一:佣金万0.5+滑点0.1%"}, "daily": [{"date": "2026-07-24", "equity": 49623.14, "regime": "weak", "defensive": false, "buy": [], "sell": [], "hold": [{"code": "159985.XSHE", "name": "豆粕ETF", "shares": 10800, "price": 2.29}, {"code": "510880.XSHG", "name": "红利ETF华泰柏瑞", "shares": 7600, "price": 3.223}], "equity_prev": 50000.0, "ret": -0.007537200000000022, "cumret": -0.007537200000000022, "idx_cumret": 0.0}], "summary": {"total_ret": -0.007537200000000022, "equity": 49623.14, "max_dd": 0.0, "sharpe": 0.0, "win_rate": 0.0, "cagr": -0.9368029783361305, "days": 1, "trades": 0}}, "s357": {"params": {"strategy": "357ETF(双持仓)"}, "daily": [], "summary": {}}, "benchmark_index": "159300.XSHE", "benchmark_name": "沪深300", "updated": "2026-07-26 09:13"};
+const V1 = DATA.v1.daily, WF = DATA.wufu.daily, S357 = DATA.s357.daily;
 let curRange = 'all';
 function parseDate(s){ return new Date(s+'T00:00:00'); }
 function fmtPct(x){ return (x*100).toFixed(2)+'%'; }
-function unionDates(){ const s=new Set(); V1.forEach(d=>s.add(d.date)); WF.forEach(d=>s.add(d.date)); return Array.from(s).sort(); }
+function unionDates(){ const s=new Set(); V1.forEach(d=>s.add(d.date)); WF.forEach(d=>s.add(d.date)); S357.forEach(d=>s.add(d.date)); return Array.from(s).sort(); }
 function rangeDates(){
   const all=unionDates(); if(!all.length) return [];
   const today=all[all.length-1];
@@ -122,15 +128,16 @@ function computeStats(slice){
 function drawChart(rdates){
   const el=document.getElementById('chart');
   if(!rdates.length){ el.innerHTML='<p style="color:#999">暂无数据</p>'; return; }
-  const vmap={}, wmap={}, imap={};
+  const vmap={}, wmap={}, smap={}, imap={};
   sliceOf(V1,rdates).forEach(d=>vmap[d.date]=d.cumret);
   sliceOf(WF,rdates).forEach(d=>wmap[d.date]=d.cumret);
+  sliceOf(S357,rdates).forEach(d=>smap[d.date]=d.cumret);
   sliceOf(V1,rdates).forEach(d=>{ if(d.idx_cumret!==undefined&&d.idx_cumret!==null) imap[d.date]=d.idx_cumret; });
   const n=rdates.length;
   function arrOf(map){ const a=[]; for(const dt of rdates) a.push(map[dt]!==undefined?map[dt]*100:null); return a; }
-  const vVals=arrOf(vmap), wVals=arrOf(wmap), iVals=arrOf(imap);
+  const vVals=arrOf(vmap), wVals=arrOf(wmap), sVals=arrOf(smap), iVals=arrOf(imap);
   let mn=0,mx=0;
-  for(const arr of [vVals,wVals,iVals]) for(const v of arr) if(v!==null){ if(v<mn)mn=v; if(v>mx)mx=v; }
+  for(const arr of [vVals,wVals,sVals,iVals]) for(const v of arr) if(v!==null){ if(v<mn)mn=v; if(v>mx)mx=v; }
   if(mx-mn<0.5){ mx+=0.5; mn-=0.5; }
   const W=700,H=260,padL=46,padR=14,padT=24,padB=30;
   const x=i=> padL+(n<=1?0:i*(W-padL-padR)/(n-1));
@@ -147,12 +154,14 @@ function drawChart(rdates){
   for(let i=0;i<n;i+=step){ xlab+='<text x="'+x(i).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" font-size="10" fill="#999">'+rdates[i].slice(5)+'</text>'; }
   let legend='<rect x="'+padL+'" y="5" width="11" height="11" fill="#e53935"/>'+
              '<text x="'+(padL+15)+'" y="14" font-size="11" fill="#444">轮动V1</text>'+
-             '<rect x="'+(padL+80)+'" y="5" width="11" height="11" fill="#7b1fa2"/>'+
-             '<text x="'+(padL+95)+'" y="14" font-size="11" fill="#444">五福</text>'+
-             '<rect x="'+(padL+150)+'" y="5" width="11" height="11" fill="#1565c0"/>'+
-             '<text x="'+(padL+165)+'" y="14" font-size="11" fill="#444">沪深300</text>';
+             '<rect x="'+(padL+84)+'" y="5" width="11" height="11" fill="#f57c00"/>'+
+             '<text x="'+(padL+99)+'" y="14" font-size="11" fill="#444">357ETF</text>'+
+             '<rect x="'+(padL+168)+'" y="5" width="11" height="11" fill="#7b1fa2"/>'+
+             '<text x="'+(padL+183)+'" y="14" font-size="11" fill="#444">五福</text>'+
+             '<rect x="'+(padL+244)+'" y="5" width="11" height="11" fill="#1565c0"/>'+
+             '<text x="'+(padL+259)+'" y="14" font-size="11" fill="#444">沪深300</text>';
   el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" width="100%" preserveAspectRatio="xMidYMid meet">'+legend+grid+
-    poly(iVals,'#1565c0',true)+poly(vVals,'#e53935',false)+poly(wVals,'#7b1fa2',false)+xlab+'</svg>';
+    poly(iVals,'#1565c0',true)+poly(vVals,'#e53935',false)+poly(sVals,'#f57c00',false)+poly(wVals,'#7b1fa2',false)+xlab+'</svg>';
 }
 function renderTable(tbId, daily, rdates){
   const tb=document.getElementById(tbId); tb.innerHTML='';
@@ -175,7 +184,7 @@ function renderTable(tbId, daily, rdates){
 function setCell(id,val,good){ const e=document.getElementById(id); e.textContent=val; if(good!==undefined) e.className=good?'pos':'neg'; }
 function update(){
   const rd=rangeDates();
-  const s1=computeStats(sliceOf(V1,rd)), s2=computeStats(sliceOf(WF,rd));
+  const s1=computeStats(sliceOf(V1,rd)), s2=computeStats(sliceOf(WF,rd)), s3=computeStats(sliceOf(S357,rd));
   if(s1){ setCell('cV1Ret',fmtPct(s1.totalRet),s1.totalRet>=0); setCell('cV1Cagr',fmtPct(s1.cagr),s1.cagr>=0);
     setCell('cV1Mdd',fmtPct(s1.mdd),false); setCell('cV1Sharpe',s1.sharpe.toFixed(2),s1.sharpe>=0);
     setCell('cV1Win',fmtPct(s1.winRate),s1.winRate>=0); setCell('cV1Tr',s1.trades,undefined);
@@ -184,11 +193,15 @@ function update(){
     setCell('cWfMdd',fmtPct(s2.mdd),false); setCell('cWfSharpe',s2.sharpe.toFixed(2),s2.sharpe>=0);
     setCell('cWfWin',fmtPct(s2.winRate),s2.winRate>=0); setCell('cWfTr',s2.trades,undefined);
     if(s2.idxTotalRet!==null){ setCell('cWfAlpha',fmtPct(s2.alpha),s2.alpha>=0); } else setCell('cWfAlpha','—',undefined); }
-  const idxTxt = (s1&&s1.idxTotalRet!==null)?fmtPct(s1.idxTotalRet):(s2&&s2.idxTotalRet!==null?fmtPct(s2.idxTotalRet):'—');
-  const ie=document.getElementById('rIdx'); ie.textContent=idxTxt; ie.className=(s1&&s1.idxTotalRet!==null&&s1.idxTotalRet>=0)?'pos':'neg';
+  if(s3){ setCell('cS357Ret',fmtPct(s3.totalRet),s3.totalRet>=0); setCell('cS357Cagr',fmtPct(s3.cagr),s3.cagr>=0);
+    setCell('cS357Mdd',fmtPct(s3.mdd),false); setCell('cS357Sharpe',s3.sharpe.toFixed(2),s3.sharpe>=0);
+    setCell('cS357Win',fmtPct(s3.winRate),s3.winRate>=0); setCell('cS357Tr',s3.trades,undefined);
+    if(s3.idxTotalRet!==null){ setCell('cS357Alpha',fmtPct(s3.alpha),s3.alpha>=0); } else setCell('cS357Alpha','—',undefined); }
+  const idxTxt = (s1&&s1.idxTotalRet!==null)?fmtPct(s1.idxTotalRet):(s2&&s2.idxTotalRet!==null?fmtPct(s2.idxTotalRet):(s3&&s3.idxTotalRet!==null?fmtPct(s3.idxTotalRet):'—'));
+  const ie=document.getElementById('rIdx'); ie.textContent=idxTxt; const iePos=(s1&&s1.idxTotalRet!==null&&s1.idxTotalRet>=0)||(s2&&s2.idxTotalRet!==null&&s2.idxTotalRet>=0)||(s3&&s3.idxTotalRet!==null&&s3.idxTotalRet>=0); ie.className=iePos?'pos':'neg';
   document.getElementById('rFrom').textContent = rd.length?rd[0]:'-';
   document.getElementById('rTo').textContent = rd.length?rd[rd.length-1]:'-';
-  drawChart(rd); renderTable('tbV1',V1,rd); renderTable('tbWf',WF,rd);
+  drawChart(rd); renderTable('tbV1',V1,rd); renderTable('tbS357',S357,rd); renderTable('tbWf',WF,rd);
 }
 document.addEventListener('DOMContentLoaded',function(){
   document.querySelectorAll('.pbtn').forEach(function(b){ b.addEventListener('click',function(){ if(b.id==='applyCustom')return; document.querySelectorAll('.pbtn').forEach(x=>x.classList.remove('on')); b.classList.add('on'); curRange=b.dataset.r; update(); }); });
