@@ -9,9 +9,9 @@
 - 云端模式(GitHub Actions)：CLOUD_MODE=1 单次计算并写 SIGNAL_357.md
 
 最后更新: 2026-07-26
-本次改动: 由 etf_rotation_1.py 克隆改造——SINGLE_HOLDING=False(双持仓买2只)；
+本次改动: 展示名改为「1_357ETF」；由 etf_rotation_1.py 克隆改造——SINGLE_HOLDING=False(双持仓买2只)；
           独立数据文件 history_357/stats_357/positions_357/kline_cache_357/dyn_window_state_357；
-          推送前缀【357ETF】；SIGNAL_357.md 避免覆盖轮动V1；与轮动V1/五福同网页三方对比。
+          推送前缀【1_357ETF】；SIGNAL_357.md 避免覆盖轮动V1；与轮动V1/五福同网页三方对比。
 """
 
 import requests
@@ -38,7 +38,7 @@ PANWATCH_URL = os.environ.get("PANWATCH_URL", "http://192.168.123.156:8000")
 PANWATCH_USER = os.environ.get("PANWATCH_USER", "shanbaotao")
 PANWATCH_PWD = os.environ.get("PANWATCH_PWD", "wynlxx11")
 PUSHPLUS_TOKEN = os.environ.get("PUSHPLUS_TOKEN", "58ce00f54cb74f0f8f6a910668dc2676")
-PUSH_PREFIX = "🟠【357ETF】"
+PUSH_PREFIX = "🟠【1_357ETF】"
 TOTAL_CAPITAL = 50000
 
 # ================== 收益统计成本假设（网页展示用，可在此调整） ==================
