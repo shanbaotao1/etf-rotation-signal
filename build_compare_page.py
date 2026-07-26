@@ -19,6 +19,7 @@ import requests
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 V1_STATS = os.path.join(SCRIPT_DIR, 'stats.json')
 WF_STATS = os.path.join(SCRIPT_DIR, 'stats_wufu.json')
+S357_STATS = os.path.join(SCRIPT_DIR, 'stats_357.json')
 OUT_HTML = os.path.join(SCRIPT_DIR, 'index.html')
 
 BENCHMARK_INDEX = '159300.XSHE'   # 沪深300ETF
