@@ -12,8 +12,8 @@ ETF动量轮动策略 - 自循环版（单只满仓 + 熊市切避险池 + 动�
 - 调仓时间：13:30（可配置）
 - 自循环模式，无需外部定时器
 
-最后更新: 2026-07-20
-本次改动: 移植回测验证通过的增强——单只满仓(SINGLE_HOLDING)+熊市切避险池(USE_WEAK_POOL_SWITCH)+
+最后更新: 2026-07-26
+本次改动: 展示名改为「2_轮动V1」（与 1_357ETF/3_五福 网页同页按1/2/3排序）；移植回测验证通过的增强——单只满仓(SINGLE_HOLDING)+熊市切避险池(USE_WEAK_POOL_SWITCH)+
           防御ETF兜底(USE_DEFENSIVE_ETF)+动态动量窗口(USE_DYNAMIC_WINDOW)；③④质量过滤暂不采用。
 """
 
@@ -41,7 +41,7 @@ PANWATCH_URL = os.environ.get("PANWATCH_URL", "http://192.168.123.156:8000")
 PANWATCH_USER = os.environ.get("PANWATCH_USER", "shanbaotao")
 PANWATCH_PWD = os.environ.get("PANWATCH_PWD", "wynlxx11")
 PUSHPLUS_TOKEN = os.environ.get("PUSHPLUS_TOKEN", "58ce00f54cb74f0f8f6a910668dc2676")
-PUSH_PREFIX = "🔵【轮动V1】"
+PUSH_PREFIX = "🔵【2_轮动V1】"
 TOTAL_CAPITAL = 50000
 
 # ================== 收益统计成本假设（网页展示用，可在此调整） ==================
