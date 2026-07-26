@@ -180,7 +180,7 @@ def build_html(v1_stats, wf_stats, s357_stats, bj_str):
 <style>{CSS}</style></head>
 <body><div class="wrap">
 <h1>📈 三策略实盘对比 · 轮动V1 vs 357ETF vs 五福</h1>
-<div class="sub">更新于 {bj_str} ｜ 三策略均自 2026-07-23 起、初始资金 ¥50,000、成本统一（佣金万0.5无最低 + 单边0.1%滑点）｜ 基准：{BENCHMARK_NAME}</div>
+<div class="sub">更新于 {bj_str} ｜ 轮动V1/五福自 2026-07-23 起、357ETF 自 2026-07-26 起、初始资金 ¥50,000、成本统一（佣金万0.5无最低 + 单边0.1%滑点）｜ 基准：{BENCHMARK_NAME}</div>
 
 <div class="card">
   <h3>📊 收益对照表（含成本，基准 {BENCHMARK_NAME}）</h3>
