@@ -11,8 +11,8 @@
 - 成本模型与轮动V1 统一：佣金万0.5（无最低5元）+ 单边0.1%滑点
 - 每个交易日 13:10（北京时间）由 GitHub Actions 调用决策+按13:10价交易；
   15:10 再次调用（SETTLE=1）仅用收盘价重算当日净值/收益，不改变持仓
-- 最后更新: 2026-07-24 (v4)
-- 本次改动: 持仓/买卖显示友好名称——内嵌 FIXED_NAMES 静态名称表 + code_name()
+- 最后更新: 2026-07-26 (v4)
+- 本次改动: 展示名改为「3_五福v1.1」（与 1_357ETF/2_轮动V1 网页同页按1/2/3排序）；持仓/买卖显示友好名称——内嵌 FIXED_NAMES 静态名称表 + code_name()
   兜底（运行时行情名优先，结算时行情名为空回退静态表），解决15:10结算把13:10
   写入的友好名覆盖成代码的问题
 ---------------------------------------------------------------------
@@ -1079,7 +1079,7 @@ def append_stats(rec):
     out = {
         'params': {'commission': COMMISSION_RATE, 'slippage': SLIPPAGE_RATE,
                    'capital': INIT_CAPITAL, 'start': daily[0]['date'] if daily else '',
-                   'strategy': '五福v1.1(多持仓)', 'cost_note': '与轮动V1统一:佣金万0.5+滑点0.1%'},
+                   'strategy': '3_五福v1.1(多持仓)', 'cost_note': '与轮动V1统一:佣金万0.5+滑点0.1%'},
         'daily': daily,
         'summary': summary,
     }
@@ -1148,7 +1148,7 @@ def settle_last_day():
         out = {
             'params': {'commission': COMMISSION_RATE, 'slippage': SLIPPAGE_RATE,
                        'capital': INIT_CAPITAL, 'start': daily[0]['date'] if daily else '',
-                       'strategy': '五福v1.1(多持仓)', 'cost_note': '与轮动V1统一:佣金万0.5+滑点0.1%'},
+                       'strategy': '3_五福v1.1(多持仓)', 'cost_note': '与轮动V1统一:佣金万0.5+滑点0.1%'},
             'daily': daily,
             'summary': summary,
         }
