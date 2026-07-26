@@ -163,9 +163,9 @@ th { background:#fafafa; color:#666; font-weight:600; }
 .note { font-size:12px; color:#999; margin-top:8px; line-height:1.6; }
 """
 def build_html(v1_stats, wf_stats, s357_stats, bj_str):
-    v1 = v1_stats or {'params': {'strategy': '轮动V1(单持仓)'}, 'daily': [], 'summary': {}}
-    wf = wf_stats or {'params': {'strategy': '五福v1.1(多持仓)'}, 'daily': [], 'summary': {}}
-    s357 = s357_stats or {'params': {'strategy': '357ETF(双持仓)'}, 'daily': [], 'summary': {}}
+    v1 = v1_stats or {'params': {'strategy': '2_轮动V1(单持仓)'}, 'daily': [], 'summary': {}}
+    wf = wf_stats or {'params': {'strategy': '3_五福v1.1(多持仓)'}, 'daily': [], 'summary': {}}
+    s357 = s357_stats or {'params': {'strategy': '1_357ETF(双持仓)'}, 'daily': [], 'summary': {}}
     data = {
         'v1': v1, 'wufu': wf, 's357': s357,
         'benchmark_index': BENCHMARK_INDEX, 'benchmark_name': BENCHMARK_NAME,
@@ -176,11 +176,11 @@ def build_html(v1_stats, wf_stats, s357_stats, bj_str):
     top = f"""<!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>三策略对比 · 轮动V1 vs 357ETF vs 五福</title>
+<title>三策略对比 · 1_357ETF vs 2_轮动V1 vs 3_五福</title>
 <style>{CSS}</style></head>
 <body><div class="wrap">
-<h1>📈 三策略实盘对比 · 轮动V1 vs 357ETF vs 五福</h1>
-<div class="sub">更新于 {bj_str} ｜ 轮动V1/五福自 2026-07-23 起、357ETF 自 2026-07-26 起、初始资金 ¥50,000、成本统一（佣金万0.5无最低 + 单边0.1%滑点）｜ 基准：{BENCHMARK_NAME}</div>
+<h1>📈 三策略实盘对比 · 1_357ETF vs 2_轮动V1 vs 3_五福</h1>
+<div class="sub">更新于 {bj_str} ｜ 2_轮动V1/3_五福自 2026-07-23 起、1_357ETF 自 2026-07-26 起、初始资金 ¥50,000、成本统一（佣金万0.5无最低 + 单边0.1%滑点）｜ 基准：{BENCHMARK_NAME}</div>
 
 <div class="card">
   <h3>📊 收益对照表（含成本，基准 {BENCHMARK_NAME}）</h3>
@@ -189,9 +189,9 @@ def build_html(v1_stats, wf_stats, s357_stats, bj_str):
       <th>策略</th><th>累计收益</th><th>年化</th><th>最大回撤</th><th>夏普</th><th>胜率</th><th>超额收益*</th><th>交易次数</th>
     </tr></thead>
     <tbody>
-      <tr><td>轮动V1</td><td id="cV1Ret">—</td><td id="cV1Cagr">—</td><td id="cV1Mdd">—</td><td id="cV1Sharpe">—</td><td id="cV1Win">—</td><td id="cV1Alpha">—</td><td id="cV1Tr">—</td></tr>
-      <tr><td>357ETF</td><td id="cS357Ret">—</td><td id="cS357Cagr">—</td><td id="cS357Mdd">—</td><td id="cS357Sharpe">—</td><td id="cS357Win">—</td><td id="cS357Alpha">—</td><td id="cS357Tr">—</td></tr>
-      <tr><td>五福</td><td id="cWfRet">—</td><td id="cWfCagr">—</td><td id="cWfMdd">—</td><td id="cWfSharpe">—</td><td id="cWfWin">—</td><td id="cWfAlpha">—</td><td id="cWfTr">—</td></tr>
+      <tr><td>1_357ETF</td><td id="cS357Ret">—</td><td id="cS357Cagr">—</td><td id="cS357Mdd">—</td><td id="cS357Sharpe">—</td><td id="cS357Win">—</td><td id="cS357Alpha">—</td><td id="cS357Tr">—</td></tr>
+      <tr><td>2_轮动V1</td><td id="cV1Ret">—</td><td id="cV1Cagr">—</td><td id="cV1Mdd">—</td><td id="cV1Sharpe">—</td><td id="cV1Win">—</td><td id="cV1Alpha">—</td><td id="cV1Tr">—</td></tr>
+      <tr><td>3_五福</td><td id="cWfRet">—</td><td id="cWfCagr">—</td><td id="cWfMdd">—</td><td id="cWfSharpe">—</td><td id="cWfWin">—</td><td id="cWfAlpha">—</td><td id="cWfTr">—</td></tr>
     </tbody>
   </table>
   <div class="chips" style="margin-top:10px">
@@ -206,22 +206,22 @@ def build_html(v1_stats, wf_stats, s357_stats, bj_str):
     <span class="cust">自定义 <input id="dfrom" type="date"> ~ <input id="dto" type="date"> <button id="applyCustom" class="pbtn">应用</button></span>
   </div>
   <div id="chart" style="margin-top:8px"></div>
-  <div class="note">* 超额收益 = 策略累计收益 − {BENCHMARK_NAME}累计收益（正=跑赢基准）。曲线：红=轮动V1，橙=357ETF，紫=五福，蓝虚线=沪深300。</div>
+  <div class="note">* 超额收益 = 策略累计收益 − {BENCHMARK_NAME}累计收益（正=跑赢基准）。曲线：红=2_轮动V1，橙=1_357ETF，紫=3_五福，蓝虚线=沪深300。</div>
 </div>
 
 <div class="card">
-  <h3>轮动V1 · 每日买卖记录</h3>
+  <h3>1_357ETF · 每日买卖记录</h3>
+  <table><thead><tr><th>日期</th><th>方向</th><th>代码</th><th>名称</th><th>股数</th><th>价格</th></tr></thead><tbody id="tbS357"></tbody></table>
+</div>
+
+<div class="card">
+  <h3>2_轮动V1 · 每日买卖记录</h3>
   <table><thead><tr><th>日期</th><th>方向</th><th>代码</th><th>名称</th><th>股数</th><th>价格</th></tr></thead><tbody id="tbV1"></tbody></table>
 </div>
 
 <div class="card">
-  <h3>五福 · 每日买卖记录</h3>
+  <h3>3_五福 · 每日买卖记录</h3>
   <table><thead><tr><th>日期</th><th>方向</th><th>代码</th><th>名称</th><th>股数</th><th>价格</th></tr></thead><tbody id="tbWf"></tbody></table>
-</div>
-
-<div class="card">
-  <h3>357ETF · 每日买卖记录</h3>
-  <table><thead><tr><th>日期</th><th>方向</th><th>代码</th><th>名称</th><th>股数</th><th>价格</th></tr></thead><tbody id="tbS357"></tbody></table>
 </div>
 
 </div>
@@ -300,11 +300,11 @@ def build_html(v1_stats, wf_stats, s357_stats, bj_str):
     "  let xlab=''; const step=Math.max(1,Math.floor(n/6));\n"
     "  for(let i=0;i<n;i+=step){ xlab+='<text x=\"'+x(i).toFixed(1)+'\" y=\"'+(H-8)+'\" text-anchor=\"middle\" font-size=\"10\" fill=\"#999\">'+rdates[i].slice(5)+'</text>'; }\n"
     "  let legend='<rect x=\"'+padL+'\" y=\"5\" width=\"11\" height=\"11\" fill=\"#e53935\"/>'+\n"
-    "             '<text x=\"'+(padL+15)+'\" y=\"14\" font-size=\"11\" fill=\"#444\">轮动V1</text>'+\n"
+    "             '<text x=\"'+(padL+15)+'\" y=\"14\" font-size=\"11\" fill=\"#444\">2_轮动V1</text>'+\n"
     "             '<rect x=\"'+(padL+84)+'\" y=\"5\" width=\"11\" height=\"11\" fill=\"#f57c00\"/>'+\n"
-    "             '<text x=\"'+(padL+99)+'\" y=\"14\" font-size=\"11\" fill=\"#444\">357ETF</text>'+\n"
+    "             '<text x=\"'+(padL+99)+'\" y=\"14\" font-size=\"11\" fill=\"#444\">1_357ETF</text>'+\n"
     "             '<rect x=\"'+(padL+168)+'\" y=\"5\" width=\"11\" height=\"11\" fill=\"#7b1fa2\"/>'+\n"
-    "             '<text x=\"'+(padL+183)+'\" y=\"14\" font-size=\"11\" fill=\"#444\">五福</text>'+\n"
+    "             '<text x=\"'+(padL+183)+'\" y=\"14\" font-size=\"11\" fill=\"#444\">3_五福</text>'+\n"
     "             '<rect x=\"'+(padL+244)+'\" y=\"5\" width=\"11\" height=\"11\" fill=\"#1565c0\"/>'+\n"
     "             '<text x=\"'+(padL+259)+'\" y=\"14\" font-size=\"11\" fill=\"#444\">__BN__</text>';\n"
     "  el.innerHTML='<svg viewBox=\"0 0 '+W+' '+H+'\" width=\"100%\" preserveAspectRatio=\"xMidYMid meet\">'+legend+grid+\n"
