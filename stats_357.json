@@ -1,0 +1,65 @@
+{
+ "params": {
+  "commission": 5e-05,
+  "slippage": 0.001,
+  "capital": 50000,
+  "start": "2026-07-27",
+  "benchmark": "159300.XSHE",
+  "benchmark_name": "沪深300"
+ },
+ "daily": [
+  {
+   "date": "2026-07-27",
+   "equity": 49947.66,
+   "buy": [
+    {
+     "code": "159985.XSHE",
+     "name": "豆粕ETF",
+     "shares": 14300,
+     "price": 2.254,
+     "amount": 32266.05
+    },
+    {
+     "code": "563020.XSHG",
+     "name": "红利低波ETF易方达",
+     "shares": 15200,
+     "price": 1.159,
+     "amount": 17635.3
+    }
+   ],
+   "sell": [],
+   "hold": [
+    {
+     "code": "159985.XSHE",
+     "name": "豆粕ETF",
+     "shares": 14300,
+     "price": 2.254
+    },
+    {
+     "code": "563020.XSHG",
+     "name": "红利低波ETF易方达",
+     "shares": 15200,
+     "price": 1.159
+    }
+   ],
+   "regime": "bear",
+   "equity_prev": 50000,
+   "ret": -0.0010467999999999034,
+   "cumret": -0.0010467999999999034,
+   "idx_cumret": 0.0
+  }
+ ],
+ "summary": {
+  "total_ret": -0.0010467999999999034,
+  "equity": 49947.66,
+  "max_dd": 0.0,
+  "sharpe": 0.0,
+  "win_rate": 0.0,
+  "cagr": -0.3176974660888243,
+  "days": 1,
+  "trades": 2,
+  "idx_total_ret": 0.0,
+  "idx_max_dd": 0.0,
+  "idx_alpha": -0.0010467999999999034
+ }
+}
