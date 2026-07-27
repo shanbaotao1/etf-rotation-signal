@@ -4,7 +4,7 @@
   "slippage": 0.001,
   "capital": 50000.0,
   "start": "2026-07-24",
-  "strategy": "五福v1.1(多持仓)",
+  "strategy": "3_五福v1.1(多持仓)",
   "cost_note": "与轮动V1统一:佣金万0.5+滑点0.1%"
  },
  "daily": [
@@ -32,16 +32,49 @@
    "equity_prev": 50000.0,
    "ret": -0.007537200000000022,
    "cumret": -0.007537200000000022
+  },
+  {
+   "date": "2026-07-27",
+   "equity": 49302.5,
+   "regime": "weak",
+   "defensive": false,
+   "buy": [
+    {
+     "code": "159985.XSHE",
+     "name": "豆粕ETF",
+     "shares": 100,
+     "price": 2.254,
+     "amount": 225.64
+    }
+   ],
+   "sell": [],
+   "hold": [
+    {
+     "code": "159985.XSHE",
+     "name": "豆粕ETF",
+     "shares": 10900,
+     "price": 2.254
+    },
+    {
+     "code": "510880.XSHG",
+     "name": "红利ETF华泰柏瑞",
+     "shares": 7600,
+     "price": 3.232
+    }
+   ],
+   "equity_prev": 49623.14,
+   "ret": -0.006461501630086297,
+   "cumret": -0.013950000000000018
   }
  ],
  "summary": {
-  "total_ret": -0.007537200000000022,
-  "equity": 49623.14,
-  "max_dd": 0.0,
-  "sharpe": 0.0,
+  "total_ret": -0.013950000000000018,
+  "equity": 49302.5,
+  "max_dd": -0.006461501630086297,
+  "sharpe": -206.58439704044596,
   "win_rate": 0.0,
-  "cagr": -0.9368029783361305,
-  "days": 1,
-  "trades": 0
+  "cagr": -0.8189893808325472,
+  "days": 2,
+  "trades": 1
  }
 }
