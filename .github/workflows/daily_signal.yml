@@ -2,11 +2,12 @@ name: ETF 三策略信号（云端）
 
 on:
   schedule:
-    # 北京时间 13:10 = UTC 05:10（2_轮动V1 + 3_五福 交易）
-    - cron: '10 5 * * 1-5'
-    # 北京时间 13:30 = UTC 05:30（1_357ETF 交易）
-    - cron: '30 5 * * 1-5'
-    # 北京时间 15:10 = UTC 07:10（收盘结算：用收盘价重算当日净值，不交易）
+    # 北京时间 10:00 = UTC 02:00（三策略统一交易）
+    # 说明：GitHub Actions 免费定时任务不保证准时（实测常延迟 2~3 小时），
+    # 故把交易时间提前到 10:00，延迟后实际约 13:00 附近执行，正好回到盘中时段。
+    - cron: '0 2 * * 1-5'
+    # 北京时间 15:10 = UTC 07:10（收盘结算：用当日收盘价重算净值，不交易）
+    # 结算用官方收盘价，与触发时刻无关，延迟不影响数据正确性。
     - cron: '10 7 * * 1-5'
   # 允许在 GitHub 网页上手动触发（Actions 标签 → Run workflow）
   # 手动触发时可勾选「收盘结算」直接跑结算模式
@@ -41,20 +42,19 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: 运行策略一：2_轮动V1（13:10交易）
-        # 仅 13:10 定时 或 手动「非结算」时跑交易
-        if: ${{ github.event.schedule == '10 5 * * 1-5' || github.event.inputs.settle == 'false' }}
+      - name: 运行策略一：2_轮动V1（10:00交易）
+        # 仅 10:00 定时 或 手动「非结算」时跑交易
+        if: ${{ github.event.schedule == '0 2 * * 1-5' || github.event.inputs.settle == 'false' }}
         continue-on-error: true
         run: CLOUD_MODE=1 SETTLE=0 python etf_rotation_1.py
 
-      - name: 运行策略二：3_五福v1.1（13:10交易）
-        if: ${{ github.event.schedule == '10 5 * * 1-5' || github.event.inputs.settle == 'false' }}
+      - name: 运行策略二：3_五福v1.1（10:00交易）
+        if: ${{ github.event.schedule == '0 2 * * 1-5' || github.event.inputs.settle == 'false' }}
         continue-on-error: true
         run: SETTLE=0 python wufu_cloud.py
 
-      - name: 运行策略三：1_357ETF（13:30交易）
-        # 仅 13:30 定时 或 手动「非结算」时跑交易
-        if: ${{ github.event.schedule == '30 5 * * 1-5' || github.event.inputs.settle == 'false' }}
+      - name: 运行策略三：1_357ETF（10:00交易）
+        if: ${{ github.event.schedule == '0 2 * * 1-5' || github.event.inputs.settle == 'false' }}
         continue-on-error: true
         run: CLOUD_MODE=1 SETTLE=0 python etf357_cloud.py
 
