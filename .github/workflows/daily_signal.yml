@@ -87,3 +87,31 @@ jobs:
             git commit -m "chore: 更新三策略信号 $(date -u +%F)"
             git push
           fi
+
+      - name: 镜像到 Gitee Pages（国内可访问）
+        # 未配置 GITEE_TOKEN/GITEE_REPO 时自动跳过；配置后在 Gitee 开启 Pages 即可国内访问
+        continue-on-error: true
+        env:
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+          GITEE_REPO: ${{ secrets.GITEE_REPO }}
+        run: |
+          if [ -z "$GITEE_TOKEN" ] || [ -z "$GITEE_REPO" ]; then
+            echo "未配置 GITEE_TOKEN/GITEE_REPO，跳过 Gitee 镜像"
+            exit 0
+          fi
+          rm -rf gitee_mirror && mkdir gitee_mirror && cd gitee_mirror
+          git init -q
+          git checkout -b master
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git remote add origin "https://oauth2:${GITEE_TOKEN}@gitee.com/${GITEE_REPO}.git"
+          cp ../index.html ../SIGNAL.md \
+             ../stats.json ../history.json ../positions_v1.json ../kline_cache.json ../dyn_window_state.json \
+             ../stats_wufu.json ../history_wufu.json ../positions_wufu.json \
+             ../SIGNAL_357.md ../stats_357.json ../history_357.json ../positions_357.json ../kline_cache_357.json ../dyn_window_state_357.json . 2>/dev/null
+          git add -A
+          if git commit -q -m "mirror: $(date -u +%F)"; then
+            git push -q -f origin master && echo "Gitee 镜像成功" || echo "Gitee 推送失败(忽略)"
+          else
+            echo "无文件变化，跳过"
+          fi
