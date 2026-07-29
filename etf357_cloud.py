@@ -787,7 +787,7 @@ def _simulate_portfolio(hist):
         new = rec.get('new', {}) or {}
         prices = rec.get('prices', {}) or {}
         buys, sells = [], []
-        # 卖出：prev 有、new 无
+        # 卖出：prev 有、new 无（清仓）
         for code, pos in prev.items():
             if code not in new:
                 px = prices.get(code, pos.get('buy_price', 0)) or 0
@@ -800,7 +800,34 @@ def _simulate_portfolio(hist):
                                   'shares': sh, 'price': round(px, 4),
                                   'amount': round(proceeds - comm, 2)})
                 holdings.pop(code, None)
-        # 买入：new 有、prev 无
+        # 同 code 股数变化：差额卖出/买入（双持仓调仓时常见）
+        for code, pos in prev.items():
+            if code in new:
+                old_sh = pos.get('shares', 0) or 0
+                new_sh = new[code].get('shares', 0) or 0
+                if old_sh == new_sh:
+                    continue
+                px = prices.get(code, new[code].get('buy_price', pos.get('buy_price', 0))) or 0
+                if px <= 0:
+                    continue
+                if old_sh > new_sh:
+                    sh = old_sh - new_sh
+                    proceeds = sh * px * (1 - SLIPPAGE_RATE)
+                    comm = proceeds * COMMISSION_RATE
+                    cash += proceeds - comm
+                    sells.append({'code': code, 'name': pos.get('name', code),
+                                  'shares': sh, 'price': round(px, 4),
+                                  'amount': round(proceeds - comm, 2)})
+                else:
+                    sh = new_sh - old_sh
+                    cost = sh * px * (1 + SLIPPAGE_RATE)
+                    comm = cost * COMMISSION_RATE
+                    cash -= (cost + comm)
+                    buys.append({'code': code, 'name': pos.get('name', code),
+                                 'shares': sh, 'price': round(px, 4),
+                                 'amount': round(cost + comm, 2)})
+                holdings[code] = new_sh
+        # 买入：new 有、prev 无（新开仓）
         for code, pos in new.items():
             if code not in prev:
                 px = prices.get(code, pos.get('buy_price', 0)) or 0
