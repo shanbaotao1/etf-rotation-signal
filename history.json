@@ -157,5 +157,36 @@
   "close_prices": {
    "563020.XSHG": 1.18
   }
+ },
+ {
+  "date": "2026-07-30",
+  "regime": "sideways",
+  "dyn": 5,
+  "m_eff": 23,
+  "prev": {
+   "563020.XSHG": {
+    "name": "红利低波ETF易方达",
+    "buy_price": 1.18,
+    "shares": 42300,
+    "amount": 49914.0,
+    "score": 1.781337444544394,
+    "buy_time": "2026-07-29 13:26:17"
+   }
+  },
+  "new": {
+   "520810.XSHG": {
+    "name": "港股通红利ETF易方达",
+    "buy_price": 1.05,
+    "shares": 47600,
+    "amount": 49980.0,
+    "score": 3.34497022666083,
+    "buy_time": "2026-07-30 13:14:05"
+   }
+  },
+  "prices": {
+   "520810.XSHG": 1.05,
+   "563020.XSHG": 1.189
+  },
+  "close_prices": {}
  }
 ]
