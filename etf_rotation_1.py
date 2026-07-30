@@ -12,9 +12,9 @@ ETF动量轮动策略 - 自循环版（单只满仓 + 熊市切避险池 + 动�
 - 调仓时间：13:30（可配置）
 - 自循环模式，无需外部定时器
 
-最后更新: 2026-07-26
-本次改动: 展示名改为「2_轮动V1」（与 1_357ETF/3_五福 网页同页按1/2/3排序）；移植回测验证通过的增强——单只满仓(SINGLE_HOLDING)+熊市切避险池(USE_WEAK_POOL_SWITCH)+
-          防御ETF兜底(USE_DEFENSIVE_ETF)+动态动量窗口(USE_DYNAMIC_WINDOW)；③④质量过滤暂不采用。
+最后更新: 2026-07-30
+本次改动: 修复单持仓「同 ETF 连续持有时每日按现价重算股数」的 bug：当 SINGLE_HOLDING=True 且目标与当前唯一持仓为同一只 ETF 时，保持原股数不变，仅更新价格/得分/时间，
+          避免产生幽灵调仓（如 7/29 红利低波 43000→42300 导致 7/30 少卖 700 股、曲线异常下跌）。同时修正本地/云端两个调仓函数。
 """
 
 import requests
@@ -1050,8 +1050,15 @@ def run_cloud_once():
         weights = [s / ssum for s in scores] if ssum > 0 else [1.0 / len(targets)] * len(targets)
         for idx, t in enumerate(targets):
             price = t['price']
-            shares = int(TOTAL_CAPITAL * weights[idx] / price / 100) * 100 if price > 0 else 0
-            new_positions[t['code']] = {
+            code = t['code']
+            # 单持仓且目标与当前持仓相同：保持股数不变，避免每日按现价重算产生幽灵调仓
+            if SINGLE_HOLDING and len(prev_positions) == 1 and code in prev_positions:
+                old_pos = prev_positions[code]
+                shares = old_pos.get('shares', 0) or 0
+                logger.info(f"单持仓目标未变，保持 {code} {shares} 股，不再按现价重算")
+            else:
+                shares = int(TOTAL_CAPITAL * weights[idx] / price / 100) * 100 if price > 0 else 0
+            new_positions[code] = {
                 "name": t['name'], "buy_price": price, "shares": shares,
                 "amount": shares * price, "score": t['score'],
                 "buy_time": _bj_now().strftime('%Y-%m-%d %H:%M:%S')
@@ -1646,11 +1653,18 @@ def adjust_positions():
         weight = weights[idx]
         buy_amount = int(total_cash * weight)
         target_price = target['price']
-        shares = int(buy_amount / target_price / 100) * 100
+        code = target['code']
+        # 单持仓且目标与当前持仓相同：保持股数不变，避免每日按现价重算产生幽灵调仓
+        if SINGLE_HOLDING and len(current_positions) == 1 and code in current_positions:
+            old_pos = current_positions[code]
+            shares = old_pos.get('shares', 0) or 0
+            logger.info(f"单持仓目标未变，保持 {code} {shares} 股，不再按现价重算")
+        else:
+            shares = int(buy_amount / target_price / 100) * 100
         if shares < 100:
             continue
         actual_amount = shares * target_price
-        new_positions[target['code']] = {
+        new_positions[code] = {
             "name": target['name'],
             "buy_price": target_price,
             "shares": shares,
@@ -1675,6 +1689,9 @@ def adjust_positions():
     # ===== 买入新持仓 =====
     buy_msgs = []
     for code, pos in new_positions.items():
+        # 同代码同股数 = 持仓未变，不再重复记录买入
+        if code in current_positions and current_positions[code].get('shares', 0) == pos['shares']:
+            continue
         buy_msgs.append(f"  买入 {pos['name']}({code}) {pos['shares']}股 × {pos['buy_price']:.3f} = {pos['amount']:.0f}元")
         send_alert(code, pos['name'], "买入", pos['buy_price'], pos['shares'], pos['amount'],
                   f"得分:{pos['score']:.4f}")
