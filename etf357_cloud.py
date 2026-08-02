@@ -852,7 +852,7 @@ def _simulate_portfolio(hist):
             hold_list.append({'code': code,
                               'name': (new.get(code) or {}).get('name', code),
                               'shares': sh, 'price': round(px, 4)})
-        daily.append({'date': date, 'equity': round(eq, 2),
+        daily.append({'date': date, 'equity': round(eq, 2), 'cash': round(cash, 2),
                       'buy': buys, 'sell': sells, 'hold': hold_list,
                       'regime': rec.get('regime')})
     # 每日收益 / 累计收益 / 前一日净值
@@ -892,7 +892,8 @@ def _summarize(daily, capital):
     days = max((d1 - d0).days, 1)
     cagr = ((end_eq / start_eq) ** (365.0 / days) - 1) if start_eq > 0 and end_eq > 0 else 0
     trades = sum(len(d['buy']) + len(d['sell']) for d in daily)
-    return {'total_ret': total_ret, 'equity': end_eq, 'max_dd': mdd,
+    return {'total_ret': total_ret, 'equity': end_eq,
+            'cash': daily[-1].get('cash', 0.0), 'max_dd': mdd,
             'sharpe': sharpe, 'win_rate': win_rate, 'cagr': cagr,
             'days': len(daily), 'trades': trades}
 
@@ -1023,6 +1024,41 @@ def build_stats():
     return out
 
 
+def _available_capital(prev_positions, quotes):
+    """
+    本次调仓可动用的总资金（防止透支买入 / 盈利后仓位闲置）。
+    = 上次结算后的现金余额 + 现有持仓按当日现价全部变现的净额，再折掉买入侧成本。
+    首次运行（无 stats_357.json）回退 TOTAL_CAPITAL。
+    注意：不可直接用固定 TOTAL_CAPITAL，否则亏损时会隐性加杠杆、盈利时会仓位不足。
+    """
+    cash = equity = None
+    try:
+        summ = (json.load(open(STATS_FILE, encoding='utf-8')).get('summary') or {})
+        if summ.get('cash') is not None:
+            cash = float(summ['cash'])
+        if summ.get('equity') is not None:
+            equity = float(summ['equity'])
+    except Exception:
+        pass
+    cost_factor = 1 + SLIPPAGE_RATE + COMMISSION_RATE      # 买入侧滑点+佣金
+    if cash is None:
+        base = equity if equity and equity > 0 else float(TOTAL_CAPITAL)
+        avail = base / cost_factor
+        logger.info(f"可动用资金（按净值近似）: {avail:.2f} 元")
+        return max(avail, 0.0)
+    total = cash
+    for code, pos in (prev_positions or {}).items():
+        sh = pos.get('shares', 0) or 0
+        q = quotes.get(code) or {}
+        px = q.get('current_price') or pos.get('buy_price', 0) or 0
+        if sh > 0 and px > 0:
+            proceeds = sh * px * (1 - SLIPPAGE_RATE)
+            total += proceeds - proceeds * COMMISSION_RATE
+    avail = max(total / cost_factor, 0.0)
+    logger.info(f"可动用资金: {avail:.2f} 元（现金 {cash:.2f} + 持仓变现）")
+    return avail
+
+
 def run_cloud_once():
     """云端单次运行：抓行情→算信号→写报告。"""
     mode_desc = "单只满仓" if SINGLE_HOLDING else "行业分散双持仓"
@@ -1056,6 +1092,8 @@ def run_cloud_once():
     prev_positions = load_positions()
     new_positions = {}
     targets = []
+    # 可动用资金按实际净值滚动（不可用固定 TOTAL_CAPITAL，否则亏损时隐性加杠杆）
+    avail_capital = _available_capital(prev_positions, quotes)
 
     if eligible:
         if SINGLE_HOLDING:
@@ -1074,7 +1112,7 @@ def run_cloud_once():
         weights = [s / ssum for s in scores] if ssum > 0 else [1.0 / len(targets)] * len(targets)
         for idx, t in enumerate(targets):
             price = t['price']
-            shares = int(TOTAL_CAPITAL * weights[idx] / price / 100) * 100 if price > 0 else 0
+            shares = int(avail_capital * weights[idx] / price / 100) * 100 if price > 0 else 0
             new_positions[t['code']] = {
                 "name": t['name'], "buy_price": price, "shares": shares,
                 "amount": shares * price, "score": t['score'],
@@ -1085,7 +1123,7 @@ def run_cloud_once():
             dq = quotes.get(DEFENSIVE_ETF)
             dp = dq.get('current_price', 0) if dq else 0
             if dp > 0:
-                shares = max(int(TOTAL_CAPITAL / dp / 100) * 100, 100)
+                shares = max(int(avail_capital / dp / 100) * 100, 100)
                 new_positions[DEFENSIVE_ETF] = {
                     "name": ETF_NAME_OVERRIDE.get(DEFENSIVE_ETF, dq.get('name', '银华日利')),
                     "buy_price": dp, "shares": shares, "amount": shares * dp,
