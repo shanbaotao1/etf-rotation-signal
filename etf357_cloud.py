@@ -8,10 +8,12 @@
 - 调仓时间：13:30（北京时间）
 - 云端模式(GitHub Actions)：CLOUD_MODE=1 单次计算并写 SIGNAL_357.md
 
-最后更新: 2026-07-26
-本次改动: 展示名改为「1_357ETF」；由 etf_rotation_1.py 克隆改造——SINGLE_HOLDING=False(双持仓买2只)；
-          独立数据文件 history_357/stats_357/positions_357/kline_cache_357/dyn_window_state_357；
-          推送前缀【1_357ETF】；SIGNAL_357.md 避免覆盖轮动V1；与轮动V1/五福同网页三方对比。
+最后更新: 2026-08-02
+本次改动: 修复云端调仓「按固定 TOTAL_CAPITAL 计算股数」导致的隐性加杠杆 bug（与轮动V1同源问题，本策略更严重：
+          双持仓且无「保持股数」分支，每日都按恒定 5 万重算 → 净值偏离本金时天天透支/闲置；实测 7/31 现金 -1061.98 元）。
+          新增 _available_capital()：可动用资金 = 上次结算现金余额 + 现有持仓按当日现价变现净额 ÷ 买入侧成本系数；
+          云端选股与防御ETF兜底两处均改用该值。_simulate_portfolio/_summarize 同步输出 cash 字段供其读取。
+前次改动: 2026-07-29 修复 _simulate_portfolio 漏算同 code 加减仓（差额调仓），此前致净值暴跌 -17.9%。
 """
 
 import requests
