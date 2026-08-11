@@ -499,16 +499,84 @@
    "equity_prev": 49110.01,
    "ret": 0.009199550152809932,
    "cumret": -0.008763999999999994
+  },
+  {
+   "date": "2026-08-11",
+   "equity": 49234.7,
+   "regime": "normal",
+   "defensive": false,
+   "buy": [
+    {
+     "code": "512400.XSHG",
+     "name": "有色金属ETF南方",
+     "shares": 10000,
+     "price": 1.989,
+     "amount": 19910.89
+    },
+    {
+     "code": "561330.XSHG",
+     "name": "矿业ETF国泰",
+     "shares": 17700,
+     "price": 1.011,
+     "amount": 17913.49
+    },
+    {
+     "code": "561360.XSHG",
+     "name": "石油ETF国泰",
+     "shares": 7800,
+     "price": 1.457,
+     "amount": 11376.53
+    }
+   ],
+   "sell": [
+    {
+     "code": "159605.XSHE",
+     "name": "互联中概",
+     "shares": 28600,
+     "price": 0.867,
+     "amount": 24770.17
+    },
+    {
+     "code": "512690.XSHG",
+     "name": "酒ETF鹏华",
+     "shares": 55500,
+     "price": 0.442,
+     "amount": 24505.24
+    }
+   ],
+   "hold": [
+    {
+     "code": "512400.XSHG",
+     "name": "有色金属ETF南方",
+     "shares": 10000,
+     "price": 1.989
+    },
+    {
+     "code": "561330.XSHG",
+     "name": "矿业ETF国泰",
+     "shares": 17700,
+     "price": 1.011
+    },
+    {
+     "code": "561360.XSHG",
+     "name": "石油ETF国泰",
+     "shares": 7800,
+     "price": 1.457
+    }
+   ],
+   "equity_prev": 49561.8,
+   "ret": -0.006599841006581841,
+   "cumret": -0.015306000000000042
   }
  ],
  "summary": {
-  "total_ret": -0.008763999999999994,
-  "equity": 49561.8,
+  "total_ret": -0.015306000000000042,
+  "equity": 49234.7,
   "max_dd": -0.04067336327366622,
-  "sharpe": -0.667493419432771,
-  "win_rate": 0.4166666666666667,
-  "cagr": -0.1722115380549878,
-  "days": 12,
-  "trades": 25
+  "sharpe": -1.1995264437569464,
+  "win_rate": 0.38461538461538464,
+  "cagr": -0.26858294848831654,
+  "days": 13,
+  "trades": 30
  }
 }
