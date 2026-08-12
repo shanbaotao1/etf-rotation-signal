@@ -451,5 +451,36 @@
   "close_prices": {
    "159928.XSHE": 0.681
   }
+ },
+ {
+  "date": "2026-08-12",
+  "regime": "sideways",
+  "dyn": 5,
+  "m_eff": 25,
+  "prev": {
+   "159928.XSHE": {
+    "name": "消费ETF",
+    "buy_price": 0.684,
+    "shares": 69700,
+    "amount": 47674.8,
+    "score": 0.8098898948529036,
+    "buy_time": "2026-08-11 11:48:43"
+   }
+  },
+  "new": {
+   "513030.XSHG": {
+    "name": "德国ETF华安",
+    "buy_price": 1.905,
+    "shares": 24800,
+    "amount": 47244.0,
+    "score": 1.081113399518891,
+    "buy_time": "2026-08-12 12:11:14"
+   }
+  },
+  "prices": {
+   "513030.XSHG": 1.905,
+   "159928.XSHE": 0.68
+  },
+  "close_prices": {}
  }
 ]

@@ -567,16 +567,84 @@
    "equity_prev": 49561.8,
    "ret": -0.033707411756635275,
    "cumret": -0.0421760000000001
+  },
+  {
+   "date": "2026-08-12",
+   "equity": 48276.77,
+   "regime": "normal",
+   "defensive": false,
+   "buy": [
+    {
+     "code": "561360.XSHG",
+     "name": "石油ETF国泰",
+     "shares": 2600,
+     "price": 1.435,
+     "amount": 3734.92
+    },
+    {
+     "code": "513360.XSHG",
+     "name": "教育ETF博时",
+     "shares": 37800,
+     "price": 0.472,
+     "amount": 17860.33
+    },
+    {
+     "code": "512690.XSHG",
+     "name": "酒ETF鹏华",
+     "shares": 34700,
+     "price": 0.443,
+     "amount": 15388.24
+    }
+   ],
+   "sell": [
+    {
+     "code": "512400.XSHG",
+     "name": "有色金属ETF南方",
+     "shares": 10000,
+     "price": 1.95,
+     "amount": 19479.53
+    },
+    {
+     "code": "561330.XSHG",
+     "name": "矿业ETF国泰",
+     "shares": 17700,
+     "price": 0.993,
+     "amount": 17557.65
+    }
+   ],
+   "hold": [
+    {
+     "code": "561360.XSHG",
+     "name": "石油ETF国泰",
+     "shares": 10400,
+     "price": 1.435
+    },
+    {
+     "code": "513360.XSHG",
+     "name": "教育ETF博时",
+     "shares": 37800,
+     "price": 0.472
+    },
+    {
+     "code": "512690.XSHG",
+     "name": "酒ETF鹏华",
+     "shares": 34700,
+     "price": 0.443
+    }
+   ],
+   "equity_prev": 47891.2,
+   "ret": 0.008050957169584372,
+   "cumret": -0.03446460000000007
   }
  ],
  "summary": {
-  "total_ret": -0.0421760000000001,
-  "equity": 47891.2,
+  "total_ret": -0.03446460000000007,
+  "equity": 48276.77,
   "max_dd": -0.04067336327366622,
-  "sharpe": -3.0021565735241396,
-  "win_rate": 0.38461538461538464,
-  "cagr": -0.5826351361543268,
-  "days": 13,
-  "trades": 30
+  "sharpe": -2.2910845245323306,
+  "win_rate": 0.42857142857142855,
+  "cagr": -0.4902125633231086,
+  "days": 14,
+  "trades": 35
  }
 }
