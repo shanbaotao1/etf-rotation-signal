@@ -635,16 +635,84 @@
    "equity_prev": 47891.2,
    "ret": 0.011072389081919098,
    "cumret": -0.031570600000000004
+  },
+  {
+   "date": "2026-08-13",
+   "equity": 48235.76,
+   "regime": "normal",
+   "defensive": false,
+   "buy": [
+    {
+     "code": "512170.XSHG",
+     "name": "医疗ETF华宝",
+     "shares": 50400,
+     "price": 0.359,
+     "amount": 18112.6
+    },
+    {
+     "code": "513030.XSHG",
+     "name": "德国ETF华安",
+     "shares": 7800,
+     "price": 1.92,
+     "amount": 14991.73
+    }
+   ],
+   "sell": [
+    {
+     "code": "561360.XSHG",
+     "name": "石油ETF国泰",
+     "shares": 10400,
+     "price": 1.408,
+     "amount": 14627.83
+    },
+    {
+     "code": "513360.XSHG",
+     "name": "教育ETF博时",
+     "shares": 37800,
+     "price": 0.471,
+     "amount": 17785.11
+    },
+    {
+     "code": "512690.XSHG",
+     "name": "酒ETF鹏华",
+     "shares": 1300,
+     "price": 0.453,
+     "amount": 588.28
+    }
+   ],
+   "hold": [
+    {
+     "code": "512690.XSHG",
+     "name": "酒ETF鹏华",
+     "shares": 33400,
+     "price": 0.453
+    },
+    {
+     "code": "512170.XSHG",
+     "name": "医疗ETF华宝",
+     "shares": 50400,
+     "price": 0.359
+    },
+    {
+     "code": "513030.XSHG",
+     "name": "德国ETF华安",
+     "shares": 7800,
+     "price": 1.92
+    }
+   ],
+   "equity_prev": 48421.47,
+   "ret": -0.0038352821589265895,
+   "cumret": -0.035284800000000005
   }
  ],
  "summary": {
-  "total_ret": -0.031570600000000004,
-  "equity": 48421.47,
+  "total_ret": -0.035284800000000005,
+  "equity": 48235.76,
   "max_dd": -0.04067336327366622,
-  "sharpe": -2.0627214151999094,
-  "win_rate": 0.42857142857142855,
-  "cagr": -0.46004410865265366,
-  "days": 14,
-  "trades": 35
+  "sharpe": -2.245775648916584,
+  "win_rate": 0.4,
+  "cagr": -0.48086063244732435,
+  "days": 15,
+  "trades": 40
  }
 }
