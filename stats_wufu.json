@@ -703,16 +703,77 @@
    "equity_prev": 48421.47,
    "ret": -0.005764178576156409,
    "cumret": -0.037152799999999986
+  },
+  {
+   "date": "2026-08-14",
+   "equity": 47979.8,
+   "regime": "normal",
+   "defensive": false,
+   "buy": [
+    {
+     "code": "513030.XSHG",
+     "name": "德国ETF华安",
+     "shares": 3800,
+     "price": 1.982,
+     "amount": 7539.51
+    },
+    {
+     "code": "513500.XSHG",
+     "name": "标普500ETF博时",
+     "shares": 3400,
+     "price": 2.748,
+     "amount": 9353.01
+    }
+   ],
+   "sell": [
+    {
+     "code": "512690.XSHG",
+     "name": "酒ETF鹏华",
+     "shares": 33400,
+     "price": 0.444,
+     "amount": 14814.03
+    },
+    {
+     "code": "512170.XSHG",
+     "name": "医疗ETF华宝",
+     "shares": 6700,
+     "price": 0.351,
+     "amount": 2349.23
+    }
+   ],
+   "hold": [
+    {
+     "code": "512170.XSHG",
+     "name": "医疗ETF华宝",
+     "shares": 43700,
+     "price": 0.351
+    },
+    {
+     "code": "513030.XSHG",
+     "name": "德国ETF华安",
+     "shares": 11600,
+     "price": 1.982
+    },
+    {
+     "code": "513500.XSHG",
+     "name": "标普500ETF博时",
+     "shares": 3400,
+     "price": 2.748
+    }
+   ],
+   "equity_prev": 48142.36,
+   "ret": -0.0033766520793745425,
+   "cumret": -0.040403999999999995
   }
  ],
  "summary": {
-  "total_ret": -0.037152799999999986,
-  "equity": 48142.36,
+  "total_ret": -0.040403999999999995,
+  "equity": 47979.8,
   "max_dd": -0.04067336327366622,
-  "sharpe": -2.3704207152619645,
-  "win_rate": 0.4,
-  "cagr": -0.49890273165021704,
-  "days": 15,
-  "trades": 40
+  "sharpe": -2.510841709334239,
+  "win_rate": 0.375,
+  "cagr": -0.5117077436860537,
+  "days": 16,
+  "trades": 44
  }
 }
