@@ -546,6 +546,8 @@
   "prices": {
    "513030.XSHG": 1.982
   },
-  "close_prices": {}
+  "close_prices": {
+   "513030.XSHG": 1.94
+  }
  }
 ]
