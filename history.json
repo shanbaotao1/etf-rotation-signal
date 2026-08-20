@@ -645,5 +645,35 @@
   "close_prices": {
    "513030.XSHG": 1.9
   }
+ },
+ {
+  "date": "2026-08-20",
+  "regime": "sideways",
+  "dyn": 5,
+  "m_eff": 25,
+  "prev": {
+   "513030.XSHG": {
+    "name": "德国ETF华安",
+    "buy_price": 1.889,
+    "shares": 24800,
+    "amount": 46847.2,
+    "score": 2.3169265668212873,
+    "buy_time": "2026-08-19 11:01:04"
+   }
+  },
+  "new": {
+   "513030.XSHG": {
+    "name": "德国ETF华安",
+    "buy_price": 1.903,
+    "shares": 24800,
+    "amount": 47194.4,
+    "score": 2.085069687832652,
+    "buy_time": "2026-08-20 11:00:57"
+   }
+  },
+  "prices": {
+   "513030.XSHG": 1.903
+  },
+  "close_prices": {}
  }
 ]
