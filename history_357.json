@@ -1227,5 +1227,35 @@
    "588120.XSHG": 0.905
   },
   "close_prices": {}
+ },
+ {
+  "date": "2026-08-31",
+  "regime": "sideways",
+  "dyn": 5,
+  "m_eff": 25,
+  "prev": {
+   "518880.XSHG": {
+    "name": "黄金ETF华安",
+    "buy_price": 9.475,
+    "shares": 5000,
+    "amount": 47375.0,
+    "score": 2.822415990995516,
+    "buy_time": "2026-08-28 22:12:49"
+   }
+  },
+  "new": {
+   "518880.XSHG": {
+    "name": "黄金ETF华安",
+    "buy_price": 9.135,
+    "shares": 5000,
+    "amount": 45675.0,
+    "score": 1.669888789531634,
+    "buy_time": "2026-08-31 16:25:27"
+   }
+  },
+  "prices": {
+   "518880.XSHG": 9.135
+  },
+  "close_prices": {}
  }
 ]
