@@ -1290,5 +1290,35 @@
   "close_prices": {
    "159985.XSHE": 2.383
   }
+ },
+ {
+  "date": "2026-09-17",
+  "regime": "bear",
+  "dyn": 3,
+  "m_eff": 25,
+  "prev": {
+   "159985.XSHE": {
+    "name": "豆粕ETF",
+    "buy_price": 2.383,
+    "shares": 19600,
+    "amount": 46706.8,
+    "score": 1.1729725516409826,
+    "buy_time": "2026-09-16 15:26:40"
+   }
+  },
+  "new": {
+   "159985.XSHE": {
+    "name": "豆粕ETF",
+    "buy_price": 2.373,
+    "shares": 19600,
+    "amount": 46510.8,
+    "score": 0.982949290532403,
+    "buy_time": "2026-09-17 15:23:38"
+   }
+  },
+  "prices": {
+   "159985.XSHE": 2.373
+  },
+  "close_prices": {}
  }
 ]
