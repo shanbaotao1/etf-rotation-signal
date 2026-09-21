@@ -1,18 +1,10 @@
 {
-    "159985.XSHE": {
-        "name": "\u8c46\u7c95ETF",
-        "buy_price": 2.299,
-        "shares": 19500,
-        "amount": 44830.5,
-        "score": 0.5762934312211914,
-        "buy_time": "2026-09-18 15:17:07"
-    },
-    "563020.XSHG": {
-        "name": "\u7ea2\u5229\u4f4e\u6ce2ETF\u6613\u65b9\u8fbe",
-        "buy_price": 1.163,
-        "shares": 100,
-        "amount": 116.3,
-        "score": 0.002381150778882876,
-        "buy_time": "2026-09-18 15:17:07"
+    "512710.XSHG": {
+        "name": "\u519b\u5de5\u9f99\u5934ETF\u5bcc\u56fd",
+        "buy_price": 0.647,
+        "shares": 69700,
+        "amount": 45095.9,
+        "score": 0.42652468367157914,
+        "buy_time": "2026-09-21 15:51:54"
     }
 }

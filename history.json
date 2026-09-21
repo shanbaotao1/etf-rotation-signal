@@ -1354,5 +1354,36 @@
   "close_prices": {
    "159985.XSHE": 2.299
   }
+ },
+ {
+  "date": "2026-09-21",
+  "regime": "sideways",
+  "dyn": 5,
+  "m_eff": 25,
+  "prev": {
+   "159985.XSHE": {
+    "name": "豆粕ETF",
+    "buy_price": 2.299,
+    "shares": 19600,
+    "amount": 45060.4,
+    "score": 0.5762934312211914,
+    "buy_time": "2026-09-18 15:13:11"
+   }
+  },
+  "new": {
+   "512710.XSHG": {
+    "name": "军工龙头ETF富国",
+    "buy_price": 0.647,
+    "shares": 69300,
+    "amount": 44837.1,
+    "score": 0.42652468367157914,
+    "buy_time": "2026-09-21 15:47:36"
+   }
+  },
+  "prices": {
+   "159985.XSHE": 2.294,
+   "512710.XSHG": 0.647
+  },
+  "close_prices": {}
  }
 ]
