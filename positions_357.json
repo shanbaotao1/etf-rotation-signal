@@ -1,18 +1,18 @@
 {
     "513100.XSHG": {
         "name": "\u7eb3\u6307ETF\u56fd\u6cf0",
-        "buy_price": 2.334,
-        "shares": 11100,
-        "amount": 25907.4,
-        "score": 0.33955118073992213,
-        "buy_time": "2026-09-23 15:38:16"
+        "buy_price": 2.312,
+        "shares": 16000,
+        "amount": 36992.0,
+        "score": 0.4124649921300362,
+        "buy_time": "2026-09-24 15:33:56"
     },
-    "512710.XSHG": {
-        "name": "\u519b\u5de5\u9f99\u5934ETF\u5bcc\u56fd",
-        "buy_price": 0.634,
-        "shares": 28700,
-        "amount": 18195.8,
-        "score": 0.23852106381957805,
-        "buy_time": "2026-09-23 15:38:16"
+    "511090.XSHG": {
+        "name": "30\u5e74\u56fd\u503aETF\u9e4f\u626c",
+        "buy_price": 120.32,
+        "shares": 0,
+        "amount": 0.0,
+        "score": 0.07156356615071072,
+        "buy_time": "2026-09-24 15:33:56"
     }
 }
