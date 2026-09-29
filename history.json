@@ -1550,5 +1550,35 @@
   "close_prices": {
    "513100.XSHG": 2.304
   }
+ },
+ {
+  "date": "2026-09-29",
+  "regime": "bear",
+  "dyn": 3,
+  "m_eff": 25,
+  "prev": {
+   "513100.XSHG": {
+    "name": "纳指ETF国泰",
+    "buy_price": 2.304,
+    "shares": 18800,
+    "amount": 43315.2,
+    "score": 0.4494374722927556,
+    "buy_time": "2026-09-28 16:26:58"
+   }
+  },
+  "new": {
+   "513100.XSHG": {
+    "name": "纳指ETF国泰",
+    "buy_price": 2.324,
+    "shares": 18800,
+    "amount": 43691.2,
+    "score": 0.5228541031890601,
+    "buy_time": "2026-09-29 16:07:12"
+   }
+  },
+  "prices": {
+   "513100.XSHG": 2.324
+  },
+  "close_prices": {}
  }
 ]
