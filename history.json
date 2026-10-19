@@ -2025,6 +2025,8 @@
   "prices": {
    "513100.XSHG": 2.345
   },
-  "close_prices": {}
+  "close_prices": {
+   "513100.XSHG": 2.345
+  }
  }
 ]
