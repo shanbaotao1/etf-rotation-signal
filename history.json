@@ -2416,5 +2416,36 @@
   "close_prices": {
    "563020.XSHG": 1.211
   }
+ },
+ {
+  "date": "2026-11-05",
+  "regime": "sideways",
+  "dyn": 5,
+  "m_eff": 23,
+  "prev": {
+   "563020.XSHG": {
+    "name": "红利低波ETF易方达",
+    "buy_price": 1.211,
+    "shares": 34900,
+    "amount": 42263.9,
+    "score": 0.13120732050606626,
+    "buy_time": "2026-11-04 16:48:38"
+   }
+  },
+  "new": {
+   "159928.XSHE": {
+    "name": "消费ETF",
+    "buy_price": 0.707,
+    "shares": 59100,
+    "amount": 41783.7,
+    "score": 0.8582291022901204,
+    "buy_time": "2026-11-05 17:12:10"
+   }
+  },
+  "prices": {
+   "159928.XSHE": 0.707,
+   "563020.XSHG": 1.2
+  },
+  "close_prices": {}
  }
 ]
