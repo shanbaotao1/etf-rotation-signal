@@ -3102,16 +3102,84 @@
    "equity_prev": 38808.92,
    "ret": -0.006467585287093791,
    "cumret": -0.2288416000000001
+  },
+  {
+   "date": "2026-11-12",
+   "equity": 38019.88,
+   "regime": "normal",
+   "defensive": false,
+   "buy": [
+    {
+     "code": "513290.XSHG",
+     "name": "纳指生物科技ETF汇添富",
+     "shares": 9600,
+     "price": 1.97,
+     "amount": 18931.86
+    },
+    {
+     "code": "513970.XSHG",
+     "name": "恒生消费ETF景顺",
+     "shares": 15100,
+     "price": 0.818,
+     "amount": 12364.77
+    },
+    {
+     "code": "513030.XSHG",
+     "name": "德国ETF华安",
+     "shares": 3500,
+     "price": 1.876,
+     "amount": 6572.89
+    }
+   ],
+   "sell": [
+    {
+     "code": "518880.XSHG",
+     "name": "黄金ETF华安",
+     "shares": 2300,
+     "price": 8.085,
+     "amount": 18575.98
+    },
+    {
+     "code": "511880.XSHG",
+     "name": "银华日利ETF",
+     "shares": 100,
+     "price": 100.961,
+     "amount": 10085.5
+    }
+   ],
+   "hold": [
+    {
+     "code": "513290.XSHG",
+     "name": "纳指生物科技ETF汇添富",
+     "shares": 9600,
+     "price": 1.97
+    },
+    {
+     "code": "513970.XSHG",
+     "name": "恒生消费ETF景顺",
+     "shares": 15100,
+     "price": 0.818
+    },
+    {
+     "code": "513030.XSHG",
+     "name": "德国ETF华安",
+     "shares": 3500,
+     "price": 1.876
+    }
+   ],
+   "equity_prev": 38557.92,
+   "ret": -0.013954072211364132,
+   "cumret": -0.2396024000000001
   }
  ],
  "summary": {
-  "total_ret": -0.2288416000000001,
-  "equity": 38557.92,
-  "max_dd": -0.22581440835868105,
-  "sharpe": -3.4350172694245864,
-  "win_rate": 0.3924050632911392,
-  "cagr": -0.5777964076790214,
-  "days": 79,
-  "trades": 153
+  "total_ret": -0.2396024000000001,
+  "equity": 38019.88,
+  "max_dd": -0.23382760542762915,
+  "sharpe": -3.5912619887950163,
+  "win_rate": 0.3875,
+  "cagr": -0.5937179359065479,
+  "days": 80,
+  "trades": 158
  }
 }

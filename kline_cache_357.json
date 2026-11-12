@@ -1,12 +1,7 @@
 {
-  "date": "2026-11-11",
+  "date": "2026-11-12",
   "data": {
     "513100.XSHG": [
-      {
-        "close": 2.195,
-        "volume": 121684084.0,
-        "amount": 0.0
-      },
       {
         "close": 2.196,
         "volume": 116546526.0,
@@ -226,196 +221,241 @@
         "close": 2.233,
         "volume": 212498680.0,
         "amount": 0.0
+      },
+      {
+        "close": 2.218,
+        "volume": 200112582.0,
+        "amount": 0.0
       }
     ],
     "513520.XSHG": [
       {
-        "close": 2.209,
-        "volume": 994307.0
-      },
-      {
         "close": 2.225,
-        "volume": 1162735.0
+        "volume": 116273500.0,
+        "amount": 0.0
       },
       {
         "close": 2.264,
-        "volume": 867226.0
+        "volume": 86722555.0,
+        "amount": 0.0
       },
       {
         "close": 2.308,
-        "volume": 931700.0
+        "volume": 93169971.0,
+        "amount": 0.0
       },
       {
         "close": 2.307,
-        "volume": 1445698.0
+        "volume": 144569800.0,
+        "amount": 0.0
       },
       {
         "close": 2.3,
-        "volume": 756561.0
+        "volume": 75656100.0,
+        "amount": 0.0
       },
       {
         "close": 2.31,
-        "volume": 781507.0
+        "volume": 78150700.0,
+        "amount": 0.0
       },
       {
         "close": 2.263,
-        "volume": 1139632.0
+        "volume": 113963200.0,
+        "amount": 0.0
       },
       {
         "close": 2.235,
-        "volume": 730954.0
+        "volume": 73095400.0,
+        "amount": 0.0
       },
       {
         "close": 2.227,
-        "volume": 766450.0
+        "volume": 76645002.0,
+        "amount": 0.0
       },
       {
         "close": 2.25,
-        "volume": 786326.0
+        "volume": 78632592.0,
+        "amount": 0.0
       },
       {
         "close": 2.245,
-        "volume": 804130.0
+        "volume": 80413000.0,
+        "amount": 0.0
       },
       {
         "close": 2.266,
-        "volume": 1134535.0
+        "volume": 113453500.0,
+        "amount": 0.0
       },
       {
         "close": 2.272,
-        "volume": 604471.0
+        "volume": 60447060.0,
+        "amount": 0.0
       },
       {
         "close": 2.306,
-        "volume": 963004.0
+        "volume": 96300400.0,
+        "amount": 0.0
       },
       {
         "close": 2.342,
-        "volume": 919381.0
+        "volume": 91938100.0,
+        "amount": 0.0
       },
       {
         "close": 2.269,
-        "volume": 1032813.0
+        "volume": 103281300.0,
+        "amount": 0.0
       },
       {
         "close": 2.275,
-        "volume": 916750.0
+        "volume": 91675000.0,
+        "amount": 0.0
       },
       {
         "close": 2.281,
-        "volume": 864389.0
+        "volume": 86438900.0,
+        "amount": 0.0
       },
       {
         "close": 2.352,
-        "volume": 1805568.0
+        "volume": 180556800.0,
+        "amount": 0.0
       },
       {
         "close": 2.4,
-        "volume": 788955.0
+        "volume": 78895515.0,
+        "amount": 0.0
       },
       {
         "close": 2.394,
-        "volume": 1637684.0
+        "volume": 163768400.0,
+        "amount": 0.0
       },
       {
         "close": 2.388,
-        "volume": 1220697.0
+        "volume": 122069680.0,
+        "amount": 0.0
       },
       {
         "close": 2.342,
-        "volume": 1434469.0
+        "volume": 143446897.0,
+        "amount": 0.0
       },
       {
         "close": 2.347,
-        "volume": 1294803.0
+        "volume": 129480300.0,
+        "amount": 0.0
       },
       {
         "close": 2.238,
-        "volume": 1952466.0
+        "volume": 195246600.0,
+        "amount": 0.0
       },
       {
         "close": 2.261,
-        "volume": 1270915.0
+        "volume": 127091500.0,
+        "amount": 0.0
       },
       {
         "close": 2.253,
-        "volume": 892374.0
+        "volume": 89237400.0,
+        "amount": 0.0
       },
       {
         "close": 2.222,
-        "volume": 1045815.0
+        "volume": 104581500.0,
+        "amount": 0.0
       },
       {
         "close": 2.23,
-        "volume": 844333.0
+        "volume": 84433300.0,
+        "amount": 0.0
       },
       {
         "close": 2.183,
-        "volume": 1097064.0
+        "volume": 109706400.0,
+        "amount": 0.0
       },
       {
         "close": 2.18,
-        "volume": 1397467.0
+        "volume": 139746732.0,
+        "amount": 0.0
       },
       {
         "close": 2.157,
-        "volume": 861024.0
+        "volume": 86102400.0,
+        "amount": 0.0
       },
       {
         "close": 2.181,
-        "volume": 784914.0
+        "volume": 78491400.0,
+        "amount": 0.0
       },
       {
         "close": 2.224,
-        "volume": 1121888.0
+        "volume": 112188800.0,
+        "amount": 0.0
       },
       {
         "close": 2.223,
-        "volume": 998649.0
+        "volume": 99864928.0,
+        "amount": 0.0
       },
       {
         "close": 2.18,
-        "volume": 1244088.0
+        "volume": 124408800.0,
+        "amount": 0.0
       },
       {
         "close": 2.178,
-        "volume": 765339.0
+        "volume": 76533900.0,
+        "amount": 0.0
       },
       {
         "close": 2.143,
-        "volume": 902199.0
+        "volume": 90219900.0,
+        "amount": 0.0
       },
       {
         "close": 2.157,
-        "volume": 1909085.0
+        "volume": 190908477.0,
+        "amount": 0.0
       },
       {
         "close": 2.115,
-        "volume": 1718674.0
+        "volume": 171867400.0,
+        "amount": 0.0
       },
       {
         "close": 2.013,
-        "volume": 1937397.0
+        "volume": 193739714.0,
+        "amount": 0.0
       },
       {
         "close": 2.027,
-        "volume": 1359819.0
+        "volume": 135981864.0,
+        "amount": 0.0
       },
       {
         "close": 2.085,
-        "volume": 1096351.0
+        "volume": 109635125.0,
+        "amount": 0.0
       },
       {
         "close": 2.111,
-        "volume": 931159.0
+        "volume": 93115900.0,
+        "amount": 0.0
+      },
+      {
+        "close": 2.074,
+        "volume": 91135657.0,
+        "amount": 0.0
       }
     ],
     "513030.XSHG": [
-      {
-        "close": 1.861,
-        "volume": 58054500.0,
-        "amount": 0.0
-      },
       {
         "close": 1.861,
         "volume": 50164800.0,
@@ -635,14 +675,14 @@
         "close": 1.845,
         "volume": 82030900.0,
         "amount": 0.0
+      },
+      {
+        "close": 1.876,
+        "volume": 82338100.0,
+        "amount": 0.0
       }
     ],
     "513130.XSHG": [
-      {
-        "close": 0.56,
-        "volume": 3696567683.0,
-        "amount": 0.0
-      },
       {
         "close": 0.556,
         "volume": 2700909197.0,
@@ -862,14 +902,14 @@
         "close": 0.497,
         "volume": 3236536542.0,
         "amount": 0.0
+      },
+      {
+        "close": 0.483,
+        "volume": 3446616485.0,
+        "amount": 0.0
       }
     ],
     "510180.XSHG": [
-      {
-        "close": 3.95,
-        "volume": 13091500.0,
-        "amount": 0.0
-      },
       {
         "close": 3.961,
         "volume": 17114300.0,
@@ -1089,14 +1129,14 @@
         "close": 3.677,
         "volume": 16616401.0,
         "amount": 0.0
+      },
+      {
+        "close": 3.663,
+        "volume": 17849600.0,
+        "amount": 0.0
       }
     ],
     "159915.XSHE": [
-      {
-        "close": 3.335,
-        "volume": 1571059961.0,
-        "amount": 0.0
-      },
       {
         "close": 3.33,
         "volume": 1516512702.0,
@@ -1316,14 +1356,14 @@
         "close": 2.59,
         "volume": 4459629870.0,
         "amount": 0.0
+      },
+      {
+        "close": 2.524,
+        "volume": 4558500133.0,
+        "amount": 0.0
       }
     ],
     "510500.XSHG": [
-      {
-        "close": 7.751,
-        "volume": 376165225.0,
-        "amount": 0.0
-      },
       {
         "close": 7.781,
         "volume": 332416255.0,
@@ -1543,14 +1583,14 @@
         "close": 6.748,
         "volume": 539771771.0,
         "amount": 0.0
+      },
+      {
+        "close": 6.628,
+        "volume": 814888244.0,
+        "amount": 0.0
       }
     ],
     "588120.XSHG": [
-      {
-        "close": 0.881,
-        "volume": 48104844.0,
-        "amount": 0.0
-      },
       {
         "close": 0.884,
         "volume": 74621700.0,
@@ -1770,14 +1810,14 @@
         "close": 0.721,
         "volume": 81067248.0,
         "amount": 0.0
+      },
+      {
+        "close": 0.71,
+        "volume": 68208958.0,
+        "amount": 0.0
       }
     ],
     "515070.XSHG": [
-      {
-        "close": 1.1,
-        "volume": 85791500.0,
-        "amount": 0.0
-      },
       {
         "close": 1.096,
         "volume": 87679800.0,
@@ -1997,14 +2037,14 @@
         "close": 0.912,
         "volume": 125029234.0,
         "amount": 0.0
+      },
+      {
+        "close": 0.902,
+        "volume": 214262896.0,
+        "amount": 0.0
       }
     ],
     "512480.XSHG": [
-      {
-        "close": 1.01,
-        "volume": 1092362695.0,
-        "amount": 0.0
-      },
       {
         "close": 1.004,
         "volume": 986874724.0,
@@ -2224,196 +2264,241 @@
         "close": 0.809,
         "volume": 1459407643.0,
         "amount": 0.0
+      },
+      {
+        "close": 0.813,
+        "volume": 1931409401.0,
+        "amount": 0.0
       }
     ],
     "516510.XSHG": [
       {
-        "close": 1.685,
-        "volume": 539637.0
-      },
-      {
         "close": 1.682,
-        "volume": 737734.0
+        "volume": 73773386.0,
+        "amount": 0.0
       },
       {
         "close": 1.663,
-        "volume": 936600.0
+        "volume": 93659978.0,
+        "amount": 0.0
       },
       {
         "close": 1.672,
-        "volume": 614163.0
+        "volume": 61416263.0,
+        "amount": 0.0
       },
       {
         "close": 1.651,
-        "volume": 481805.0
+        "volume": 48180500.0,
+        "amount": 0.0
       },
       {
         "close": 1.632,
-        "volume": 452556.0
+        "volume": 45255600.0,
+        "amount": 0.0
       },
       {
         "close": 1.614,
-        "volume": 462774.0
+        "volume": 46277421.0,
+        "amount": 0.0
       },
       {
         "close": 1.6,
-        "volume": 604191.0
+        "volume": 60419100.0,
+        "amount": 0.0
       },
       {
         "close": 1.598,
-        "volume": 492490.0
+        "volume": 49249009.0,
+        "amount": 0.0
       },
       {
         "close": 1.591,
-        "volume": 439477.0
+        "volume": 43947700.0,
+        "amount": 0.0
       },
       {
         "close": 1.614,
-        "volume": 586363.0
+        "volume": 58636321.0,
+        "amount": 0.0
       },
       {
         "close": 1.603,
-        "volume": 515904.0
+        "volume": 51590379.0,
+        "amount": 0.0
       },
       {
         "close": 1.639,
-        "volume": 714716.0
+        "volume": 71471600.0,
+        "amount": 0.0
       },
       {
         "close": 1.647,
-        "volume": 403655.0
+        "volume": 40365522.0,
+        "amount": 0.0
       },
       {
         "close": 1.684,
-        "volume": 1606547.0
+        "volume": 160654700.0,
+        "amount": 0.0
       },
       {
         "close": 1.654,
-        "volume": 1170360.0
+        "volume": 117035971.0,
+        "amount": 0.0
       },
       {
         "close": 1.626,
-        "volume": 1047197.0
+        "volume": 104719727.0,
+        "amount": 0.0
       },
       {
         "close": 1.57,
-        "volume": 1331731.0
+        "volume": 133173094.0,
+        "amount": 0.0
       },
       {
         "close": 1.579,
-        "volume": 1024359.0
+        "volume": 102435900.0,
+        "amount": 0.0
       },
       {
         "close": 1.564,
-        "volume": 908071.0
+        "volume": 90807100.0,
+        "amount": 0.0
       },
       {
         "close": 1.52,
-        "volume": 561994.0
+        "volume": 56199398.0,
+        "amount": 0.0
       },
       {
         "close": 1.541,
-        "volume": 537242.0
+        "volume": 53724181.0,
+        "amount": 0.0
       },
       {
         "close": 1.508,
-        "volume": 416432.0
+        "volume": 41643232.0,
+        "amount": 0.0
       },
       {
         "close": 1.505,
-        "volume": 425135.0
+        "volume": 42513500.0,
+        "amount": 0.0
       },
       {
         "close": 1.474,
-        "volume": 374501.0
+        "volume": 37450100.0,
+        "amount": 0.0
       },
       {
         "close": 1.428,
-        "volume": 554418.0
+        "volume": 55441813.0,
+        "amount": 0.0
       },
       {
         "close": 1.42,
-        "volume": 538373.0
+        "volume": 53837347.0,
+        "amount": 0.0
       },
       {
         "close": 1.438,
-        "volume": 574739.0
+        "volume": 57473933.0,
+        "amount": 0.0
       },
       {
         "close": 1.47,
-        "volume": 525519.0
+        "volume": 52551888.0,
+        "amount": 0.0
       },
       {
         "close": 1.482,
-        "volume": 626308.0
+        "volume": 62630806.0,
+        "amount": 0.0
       },
       {
         "close": 1.432,
-        "volume": 557097.0
+        "volume": 55709650.0,
+        "amount": 0.0
       },
       {
         "close": 1.501,
-        "volume": 1388686.0
+        "volume": 138868601.0,
+        "amount": 0.0
       },
       {
         "close": 1.491,
-        "volume": 1149807.0
+        "volume": 114980732.0,
+        "amount": 0.0
       },
       {
         "close": 1.439,
-        "volume": 493257.0
+        "volume": 49325708.0,
+        "amount": 0.0
       },
       {
         "close": 1.457,
-        "volume": 509449.0
+        "volume": 50944949.0,
+        "amount": 0.0
       },
       {
         "close": 1.398,
-        "volume": 497139.0
+        "volume": 49713852.0,
+        "amount": 0.0
       },
       {
         "close": 1.326,
-        "volume": 577797.0
+        "volume": 57779652.0,
+        "amount": 0.0
       },
       {
         "close": 1.386,
-        "volume": 846375.0
+        "volume": 84637517.0,
+        "amount": 0.0
       },
       {
         "close": 1.352,
-        "volume": 472300.0
+        "volume": 47229954.0,
+        "amount": 0.0
       },
       {
         "close": 1.411,
-        "volume": 804250.0
+        "volume": 80425013.0,
+        "amount": 0.0
       },
       {
         "close": 1.459,
-        "volume": 673104.0
+        "volume": 67310362.0,
+        "amount": 0.0
       },
       {
         "close": 1.416,
-        "volume": 477461.0
+        "volume": 47746073.0,
+        "amount": 0.0
       },
       {
         "close": 1.415,
-        "volume": 349505.0
+        "volume": 34950486.0,
+        "amount": 0.0
       },
       {
         "close": 1.431,
-        "volume": 329686.0
+        "volume": 32968600.0,
+        "amount": 0.0
       },
       {
         "close": 1.445,
-        "volume": 720458.0
+        "volume": 72045797.0,
+        "amount": 0.0
+      },
+      {
+        "close": 1.416,
+        "volume": 65496018.0,
+        "amount": 0.0
       }
     ],
     "159667.XSHE": [
-      {
-        "close": 0.643,
-        "volume": 232599899.0,
-        "amount": 0.0
-      },
       {
         "close": 0.65,
         "volume": 147329100.0,
@@ -2633,196 +2718,241 @@
         "close": 0.528,
         "volume": 222659187.0,
         "amount": 0.0
+      },
+      {
+        "close": 0.512,
+        "volume": 225658900.0,
+        "amount": 0.0
       }
     ],
     "159755.XSHE": [
       {
-        "close": 0.899,
-        "volume": 2747612.0
-      },
-      {
         "close": 0.905,
-        "volume": 2585797.0
+        "volume": 258579680.0,
+        "amount": 0.0
       },
       {
         "close": 0.894,
-        "volume": 3194701.0
+        "volume": 319470077.0,
+        "amount": 0.0
       },
       {
         "close": 0.898,
-        "volume": 2500999.0
+        "volume": 250099912.0,
+        "amount": 0.0
       },
       {
         "close": 0.892,
-        "volume": 2663686.0
+        "volume": 266368593.0,
+        "amount": 0.0
       },
       {
         "close": 0.892,
-        "volume": 2597711.0
+        "volume": 259771100.0,
+        "amount": 0.0
       },
       {
         "close": 0.879,
-        "volume": 2151454.0
+        "volume": 215145383.0,
+        "amount": 0.0
       },
       {
         "close": 0.867,
-        "volume": 3128654.0
+        "volume": 312865419.0,
+        "amount": 0.0
       },
       {
         "close": 0.879,
-        "volume": 2315320.0
+        "volume": 231532025.0,
+        "amount": 0.0
       },
       {
         "close": 0.866,
-        "volume": 2836683.0
+        "volume": 283668300.0,
+        "amount": 0.0
       },
       {
         "close": 0.866,
-        "volume": 3930399.0
+        "volume": 393039873.0,
+        "amount": 0.0
       },
       {
         "close": 0.865,
-        "volume": 2207801.0
+        "volume": 220780077.0,
+        "amount": 0.0
       },
       {
         "close": 0.877,
-        "volume": 2482792.0
+        "volume": 248279173.0,
+        "amount": 0.0
       },
       {
         "close": 0.879,
-        "volume": 2324040.0
+        "volume": 232404036.0,
+        "amount": 0.0
       },
       {
         "close": 0.883,
-        "volume": 2553667.0
+        "volume": 255366676.0,
+        "amount": 0.0
       },
       {
         "close": 0.876,
-        "volume": 2016741.0
+        "volume": 201674100.0,
+        "amount": 0.0
       },
       {
         "close": 0.856,
-        "volume": 2035770.0
+        "volume": 203577000.0,
+        "amount": 0.0
       },
       {
         "close": 0.832,
-        "volume": 2515343.0
+        "volume": 251534331.0,
+        "amount": 0.0
       },
       {
         "close": 0.84,
-        "volume": 3254727.0
+        "volume": 325472700.0,
+        "amount": 0.0
       },
       {
         "close": 0.849,
-        "volume": 3305898.0
+        "volume": 330589800.0,
+        "amount": 0.0
       },
       {
         "close": 0.852,
-        "volume": 5364145.0
+        "volume": 536414485.0,
+        "amount": 0.0
       },
       {
         "close": 0.864,
-        "volume": 10256138.0
+        "volume": 1025613765.0,
+        "amount": 0.0
       },
       {
         "close": 0.846,
-        "volume": 5529153.0
+        "volume": 552915279.0,
+        "amount": 0.0
       },
       {
         "close": 0.819,
-        "volume": 6643177.0
+        "volume": 664317693.0,
+        "amount": 0.0
       },
       {
         "close": 0.799,
-        "volume": 5249353.0
+        "volume": 524935251.0,
+        "amount": 0.0
       },
       {
         "close": 0.788,
-        "volume": 4917239.0
+        "volume": 491723854.0,
+        "amount": 0.0
       },
       {
         "close": 0.78,
-        "volume": 4790840.0
+        "volume": 479083977.0,
+        "amount": 0.0
       },
       {
         "close": 0.775,
-        "volume": 2933862.0
+        "volume": 293386168.0,
+        "amount": 0.0
       },
       {
         "close": 0.775,
-        "volume": 3599960.0
+        "volume": 359996000.0,
+        "amount": 0.0
       },
       {
         "close": 0.742,
-        "volume": 4896353.0
+        "volume": 489635272.0,
+        "amount": 0.0
       },
       {
         "close": 0.728,
-        "volume": 3811982.0
+        "volume": 381198231.0,
+        "amount": 0.0
       },
       {
         "close": 0.76,
-        "volume": 5891521.0
+        "volume": 589152073.0,
+        "amount": 0.0
       },
       {
         "close": 0.758,
-        "volume": 4076554.0
+        "volume": 407655416.0,
+        "amount": 0.0
       },
       {
         "close": 0.745,
-        "volume": 2419897.0
+        "volume": 241989706.0,
+        "amount": 0.0
       },
       {
         "close": 0.75,
-        "volume": 2954048.0
+        "volume": 295404800.0,
+        "amount": 0.0
       },
       {
         "close": 0.732,
-        "volume": 2420561.0
+        "volume": 242056081.0,
+        "amount": 0.0
       },
       {
         "close": 0.728,
-        "volume": 2981936.0
+        "volume": 298193569.0,
+        "amount": 0.0
       },
       {
         "close": 0.745,
-        "volume": 3459724.0
+        "volume": 345972353.0,
+        "amount": 0.0
       },
       {
         "close": 0.756,
-        "volume": 5267614.0
+        "volume": 526761405.0,
+        "amount": 0.0
       },
       {
         "close": 0.777,
-        "volume": 4842562.0
+        "volume": 484256206.0,
+        "amount": 0.0
       },
       {
         "close": 0.805,
-        "volume": 9483835.0
+        "volume": 948383510.0,
+        "amount": 0.0
       },
       {
         "close": 0.784,
-        "volume": 5183487.0
+        "volume": 518348743.0,
+        "amount": 0.0
       },
       {
         "close": 0.771,
-        "volume": 3722153.0
+        "volume": 372215315.0,
+        "amount": 0.0
       },
       {
         "close": 0.775,
-        "volume": 2221652.0
+        "volume": 222165167.0,
+        "amount": 0.0
       },
       {
         "close": 0.77,
-        "volume": 3193390.0
+        "volume": 319339013.0,
+        "amount": 0.0
+      },
+      {
+        "close": 0.753,
+        "volume": 376740235.0,
+        "amount": 0.0
       }
     ],
     "516160.XSHG": [
-      {
-        "close": 2.364,
-        "volume": 50928790.0,
-        "amount": 0.0
-      },
       {
         "close": 2.37,
         "volume": 47192288.0,
@@ -3042,14 +3172,14 @@
         "close": 2.049,
         "volume": 82799516.0,
         "amount": 0.0
+      },
+      {
+        "close": 2.014,
+        "volume": 59443395.0,
+        "amount": 0.0
       }
     ],
     "512710.XSHG": [
-      {
-        "close": 0.636,
-        "volume": 808332400.0,
-        "amount": 0.0
-      },
       {
         "close": 0.636,
         "volume": 382563637.0,
@@ -3269,14 +3399,14 @@
         "close": 0.611,
         "volume": 311582902.0,
         "amount": 0.0
+      },
+      {
+        "close": 0.611,
+        "volume": 509214500.0,
+        "amount": 0.0
       }
     ],
     "159227.XSHE": [
-      {
-        "close": 1.034,
-        "volume": 269658040.0,
-        "amount": 0.0
-      },
       {
         "close": 1.03,
         "volume": 147387559.0,
@@ -3496,14 +3626,14 @@
         "close": 0.958,
         "volume": 130003600.0,
         "amount": 0.0
+      },
+      {
+        "close": 0.956,
+        "volume": 162172000.0,
+        "amount": 0.0
       }
     ],
     "510410.XSHG": [
-      {
-        "close": 1.972,
-        "volume": 13068857.0,
-        "amount": 0.0
-      },
       {
         "close": 1.985,
         "volume": 8417900.0,
@@ -3723,14 +3853,14 @@
         "close": 1.703,
         "volume": 4533630.0,
         "amount": 0.0
+      },
+      {
+        "close": 1.668,
+        "volume": 5785800.0,
+        "amount": 0.0
       }
     ],
     "159980.XSHE": [
-      {
-        "close": 2.15,
-        "volume": 190934200.0,
-        "amount": 0.0
-      },
       {
         "close": 2.166,
         "volume": 171611378.0,
@@ -3950,14 +4080,14 @@
         "close": 2.056,
         "volume": 182843300.0,
         "amount": 0.0
+      },
+      {
+        "close": 2.037,
+        "volume": 172822556.0,
+        "amount": 0.0
       }
     ],
     "159985.XSHE": [
-      {
-        "close": 2.344,
-        "volume": 356608400.0,
-        "amount": 0.0
-      },
       {
         "close": 2.387,
         "volume": 407792267.0,
@@ -4177,14 +4307,14 @@
         "close": 2.185,
         "volume": 133937904.0,
         "amount": 0.0
+      },
+      {
+        "close": 2.187,
+        "volume": 88893657.0,
+        "amount": 0.0
       }
     ],
     "512290.XSHG": [
-      {
-        "close": 1.028,
-        "volume": 109597000.0,
-        "amount": 0.0
-      },
       {
         "close": 1.038,
         "volume": 74289800.0,
@@ -4404,14 +4534,14 @@
         "close": 1.006,
         "volume": 100969500.0,
         "amount": 0.0
+      },
+      {
+        "close": 1.007,
+        "volume": 82053500.0,
+        "amount": 0.0
       }
     ],
     "159992.XSHE": [
-      {
-        "close": 0.843,
-        "volume": 719707208.0,
-        "amount": 0.0
-      },
       {
         "close": 0.851,
         "volume": 762035300.0,
@@ -4631,14 +4761,14 @@
         "close": 0.823,
         "volume": 593122643.0,
         "amount": 0.0
+      },
+      {
+        "close": 0.823,
+        "volume": 734868604.0,
+        "amount": 0.0
       }
     ],
     "159928.XSHE": [
-      {
-        "close": 0.668,
-        "volume": 344736700.0,
-        "amount": 0.0
-      },
       {
         "close": 0.665,
         "volume": 272422500.0,
@@ -4858,14 +4988,14 @@
         "close": 0.686,
         "volume": 1228279900.0,
         "amount": 0.0
+      },
+      {
+        "close": 0.69,
+        "volume": 565937400.0,
+        "amount": 0.0
       }
     ],
     "159865.XSHE": [
-      {
-        "close": 0.548,
-        "volume": 339590688.0,
-        "amount": 0.0
-      },
       {
         "close": 0.543,
         "volume": 322784133.0,
@@ -5085,14 +5215,14 @@
         "close": 0.536,
         "volume": 222195456.0,
         "amount": 0.0
+      },
+      {
+        "close": 0.536,
+        "volume": 211749077.0,
+        "amount": 0.0
       }
     ],
     "512000.XSHG": [
-      {
-        "close": 0.521,
-        "volume": 1743431259.0,
-        "amount": 0.0
-      },
       {
         "close": 0.526,
         "volume": 1814421624.0,
@@ -5312,14 +5442,14 @@
         "close": 0.477,
         "volume": 1192708062.0,
         "amount": 0.0
+      },
+      {
+        "close": 0.472,
+        "volume": 1615859138.0,
+        "amount": 0.0
       }
     ],
     "511090.XSHG": [
-      {
-        "close": 118.693,
-        "volume": 29276156.0,
-        "amount": 0.0
-      },
       {
         "close": 119.097,
         "volume": 30243800.0,
@@ -5539,14 +5669,14 @@
         "close": 120.981,
         "volume": 51239943.0,
         "amount": 0.0
+      },
+      {
+        "close": 121.194,
+        "volume": 51243860.0,
+        "amount": 0.0
       }
     ],
     "511260.XSHG": [
-      {
-        "close": 135.787,
-        "volume": 40488252.0,
-        "amount": 0.0
-      },
       {
         "close": 135.861,
         "volume": 6004156.0,
@@ -5766,14 +5896,14 @@
         "close": 135.913,
         "volume": 11890383.0,
         "amount": 0.0
+      },
+      {
+        "close": 135.969,
+        "volume": 32999820.0,
+        "amount": 0.0
       }
     ],
     "518880.XSHG": [
-      {
-        "close": 8.902,
-        "volume": 849701487.0,
-        "amount": 0.0
-      },
       {
         "close": 9.105,
         "volume": 651064968.0,
@@ -5993,14 +6123,14 @@
         "close": 8.289,
         "volume": 348222940.0,
         "amount": 0.0
+      },
+      {
+        "close": 8.085,
+        "volume": 480081704.0,
+        "amount": 0.0
       }
     ],
     "563020.XSHG": [
-      {
-        "close": 1.193,
-        "volume": 278378677.0,
-        "amount": 0.0
-      },
       {
         "close": 1.192,
         "volume": 399841566.0,
@@ -6220,14 +6350,14 @@
         "close": 1.21,
         "volume": 175564182.0,
         "amount": 0.0
+      },
+      {
+        "close": 1.208,
+        "volume": 537822443.0,
+        "amount": 0.0
       }
     ],
     "520810.XSHG": [
-      {
-        "close": 1.032,
-        "volume": 14419600.0,
-        "amount": 0.0
-      },
       {
         "close": 1.033,
         "volume": 1780800.0,
@@ -6447,14 +6577,14 @@
         "close": 0.996,
         "volume": 2925800.0,
         "amount": 0.0
+      },
+      {
+        "close": 0.986,
+        "volume": 3405800.0,
+        "amount": 0.0
       }
     ],
     "511880.XSHG": [
-      {
-        "close": 100.767,
-        "volume": 153915192.0,
-        "amount": 0.0
-      },
       {
         "close": 100.767,
         "volume": 125705170.0,
@@ -6673,6 +6803,11 @@
       {
         "close": 100.951,
         "volume": 206792960.0,
+        "amount": 0.0
+      },
+      {
+        "close": 100.961,
+        "volume": 195827321.0,
         "amount": 0.0
       }
     ]
