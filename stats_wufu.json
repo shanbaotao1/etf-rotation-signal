@@ -3326,16 +3326,71 @@
    "equity_prev": 36242.46,
    "ret": -0.018408242707586564,
    "cumret": -0.2884939999999999
+  },
+  {
+   "date": "2026-11-19",
+   "equity": 35056.21,
+   "regime": "weak",
+   "defensive": true,
+   "buy": [
+    {
+     "code": "518880.XSHG",
+     "name": "黄金ETF华安",
+     "shares": 2300,
+     "price": 7.612,
+     "amount": 17525.98
+    },
+    {
+     "code": "511880.XSHG",
+     "name": "银华日利ETF",
+     "shares": 100,
+     "price": 100.987,
+     "amount": 10109.3
+    }
+   ],
+   "sell": [
+    {
+     "code": "513290.XSHG",
+     "name": "纳指生物科技ETF汇添富",
+     "shares": 9600,
+     "price": 1.816,
+     "amount": 17415.3
+    },
+    {
+     "code": "513030.XSHG",
+     "name": "德国ETF华安",
+     "shares": 10000,
+     "price": 1.733,
+     "amount": 17311.8
+    }
+   ],
+   "hold": [
+    {
+     "code": "518880.XSHG",
+     "name": "黄金ETF华安",
+     "shares": 2300,
+     "price": 7.612
+    },
+    {
+     "code": "511880.XSHG",
+     "name": "银华日利ETF",
+     "shares": 100,
+     "price": 100.987
+    }
+   ],
+   "equity_prev": 35575.3,
+   "ret": -0.014591303516765963,
+   "cumret": -0.2988758
   }
  ],
  "summary": {
-  "total_ret": -0.2884939999999999,
-  "equity": 35575.3,
-  "max_dd": -0.2830905097903921,
-  "sharpe": -4.25736214323033,
-  "win_rate": 0.36904761904761907,
-  "cagr": -0.6541819436497869,
-  "days": 84,
-  "trades": 165
+  "total_ret": -0.2988758,
+  "equity": 35056.21,
+  "max_dd": -0.2935511537560904,
+  "sharpe": -4.40540729035042,
+  "win_rate": 0.36470588235294116,
+  "cagr": -0.6665660432391805,
+  "days": 85,
+  "trades": 169
  }
 }
