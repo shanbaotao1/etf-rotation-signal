@@ -3442,16 +3442,64 @@
    "equity_prev": 34237.11,
    "ret": -0.007626227797848495,
    "cumret": -0.3204798
+  },
+  {
+   "date": "2026-11-24",
+   "equity": 33879.03,
+   "regime": "weak",
+   "defensive": true,
+   "buy": [
+    {
+     "code": "518880.XSHG",
+     "name": "黄金ETF华安",
+     "shares": 2200,
+     "price": 7.391,
+     "amount": 16277.27
+    },
+    {
+     "code": "511880.XSHG",
+     "name": "银华日利ETF",
+     "shares": 100,
+     "price": 100.993,
+     "amount": 10109.9
+    }
+   ],
+   "sell": [
+    {
+     "code": "520830.XSHG",
+     "name": "沙特ETF华泰柏瑞",
+     "shares": 37300,
+     "price": 0.817,
+     "amount": 30442.1
+    }
+   ],
+   "hold": [
+    {
+     "code": "518880.XSHG",
+     "name": "黄金ETF华安",
+     "shares": 2200,
+     "price": 7.391
+    },
+    {
+     "code": "511880.XSHG",
+     "name": "银华日利ETF",
+     "shares": 100,
+     "price": 100.993
+    }
+   ],
+   "equity_prev": 33976.01,
+   "ret": -0.0028543669489149437,
+   "cumret": -0.3224194
   }
  ],
  "summary": {
-  "total_ret": -0.3204798,
-  "equity": 33976.01,
-  "max_dd": -0.31531922405555146,
-  "sharpe": -4.696752448745512,
-  "win_rate": 0.3563218390804598,
-  "cagr": -0.6852378487758483,
-  "days": 87,
-  "trades": 172
+  "total_ret": -0.3224194,
+  "equity": 33879.03,
+  "max_dd": -0.31727355423296477,
+  "sharpe": -4.705156514027338,
+  "win_rate": 0.3522727272727273,
+  "cagr": -0.6849495576458178,
+  "days": 88,
+  "trades": 175
  }
 }
